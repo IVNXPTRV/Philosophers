@@ -1,0 +1,21 @@
+# IDE
+.vscode
+
+# program
+philo
+
+# objects and dependencies
+**/dep/*
+**/obj/*
+*.d
+*.o
+*.a
+
+# trashy
+.DS_store
+*.txt
+*.py
+*.md
+*.lldb
+*.png
+*.gch
