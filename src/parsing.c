@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 12:31:50 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/15 13:09:25 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/16 04:20:16 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
  * - not more then INT_MAX
  * - not negative
  * - args have to be only numeric
+ * - num of meals can't be zero
+ *
  *  number_of_philosophers time_to_die time_to_eat time_to_sleep
  *  [number_of_times_each_philosopher_must_eat]
  * ./philo    5    800  200   200     7
@@ -31,29 +33,24 @@
 */
 int	parse_input(t_ctx *ctx, int ac, char **av)
 {
-	int	nbr;
-
-	if (ac < 5 || ac > 6) // error wrong number of arguments
+	if (ac < 5 || ac > 6)
 		return (puterr("wrong number of arguments"));
-	if (ft_atoi(&nbr, av[1]) != SUCCESS)
+	if (ft_atoi(&ctx->nbr_philos, av[1]) != SUCCESS)
 		return (ERROR);
-	ctx->nbr_philos = nbr;
-	if (ft_atoi(&nbr, av[2]) != SUCCESS)
+	if (ctx->nbr_philos == 0)
+		return (puterr("number of philos has to be greater then 0"));
+	if (ft_atoi(&ctx->time_to_die , av[2]) != SUCCESS)
 		return (ERROR);
-	ctx->time_to_die = nbr;
-	if (ft_atoi(&nbr, av[3]) != SUCCESS)
+	if (ft_atoi(&ctx->time_to_eat, av[3]) != SUCCESS)
 		return (ERROR);
-	ctx->time_to_eat = nbr;
-	if (ft_atoi(&nbr, av[4]) != SUCCESS)
+	if (ft_atoi(&ctx->time_to_sleep, av[4]) != SUCCESS)
 		return (ERROR);
-	ctx->time_to_sleep = nbr;
-	if (ac == 6)
-	{
-		if (ft_atoi(&nbr, av[5]) != SUCCESS)
-			return (ERROR);
-	}
-	else
-		nbr = -1;
-	ctx->nbr_meals = nbr;
+	if (ctx->time_to_die == 0 || ctx->time_to_eat == 0 || ctx->time_to_sleep == 0)
+		return (puterr("time has to be greater then 0"));
+	ctx->nbr_meals = -1;
+	if (av[5] && ft_atoi(&ctx->nbr_meals, av[5]) != SUCCESS)
+		return (ERROR);
+	if (ctx->nbr_meals == 0)
+		return (puterr("number of meals can't be 0"));
 	return (SUCCESS);
 }

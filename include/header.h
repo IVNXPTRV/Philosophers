@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/15 13:00:54 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/16 02:42:19 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_fork
 	pthread_mutex_t	lock;
 } t_fork;
 
-typedef long long t_time;
+typedef long int t_time;
 
 typedef struct s_philo
 {
@@ -59,11 +59,11 @@ typedef struct s_philo
 */
 typedef struct s_ctx
 {
-	int		nbr_philos;
+	long	nbr_philos;
 	t_time	time_to_die;		// in milliseconds
 	t_time	time_to_eat;		// in milliseconds
 	t_time	time_to_sleep;		// in milliseconds
-	int		nbr_meals;			// -1 if not provided
+	long	nbr_meals;			// -1 if not provided
 	t_time	start_time;			// in milliseconds
 	t_philo	*philo; 			// array of philos
 } t_ctx;
@@ -73,7 +73,7 @@ typedef struct s_ctx
  * UTILS
 */
 size_t	ft_strlen(const char *str);
-int		ft_atoi(int *nbr, char *str);
+int	ft_atoi(int64_t *nbr, char *str);
 
 int	puterr(char *msg);
 int	parse_input(t_ctx *ctx, int ac, char **av);

@@ -22,7 +22,7 @@ inline  static	bool is_numeric(char c)
 	return (c >= '0' && c <= '9');
 }
 
-int	ft_atoi(int *nbr, char *str)
+int	ft_atoi(int64_t *nbr, char *str)
 {
 	char	digit;
 
@@ -32,25 +32,16 @@ int	ft_atoi(int *nbr, char *str)
 	if (*str == '+')
 		str++;
 	else if (*str == '-')
-		return (puterr("arguments have to be positive"));
+		return (puterr("each argument has to be positive"));
 	while (is_numeric(*str))
 	{
 		digit = *str - '0';
 		if (*nbr > (INT32_MAX - digit) / 10)
-			return (puterr("arguments have to be less than INT_MAX"));
+			return (puterr("each argument has to be not greater than INT_MAX"));
 		*nbr = *nbr * 10 + *str - '0';
 		str++;
 	}
 	if (*str != '\0')
-		return (puterr("argumens have to be numeric only"));
+		return (puterr("each argument has to be numeric only"));
 	return (SUCCESS);
 }
-
-// int main()
-// {
-// 	int nbr;
-// 	int code;
-
-// 	code = ft_atoi(&nbr, "ad2147483647");
-// 	printf("code: %d\nnbr: %d\n", code, nbr);
-// }
