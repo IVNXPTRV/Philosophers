@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:21:35 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 12:07:48 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/16 12:58:27 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	init_ctx(t_ctx *ctx)
 {
 	if (mtx_init(&ctx->lock) != SUCCESS)
 		return (ERROR);
-	ctx->status = 1;
+	ctx->status = WAIT;
 	return (SUCCESS);
 }
 
@@ -130,5 +130,7 @@ int	init_data(t_ctx *ctx)
 		clean_ctx(&ctx);
 		return (ERROR);
 	}
+	if (ctx->philos_full != -1)
+		ctx->philos_full = 0;
 	return (SUCCESS);
 }

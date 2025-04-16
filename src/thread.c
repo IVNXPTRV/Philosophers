@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 09:25:24 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 09:40:33 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/16 12:37:48 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int th_create(pthread_t *tid, void *func(void *), void *arg)
 	int	code;
 
 	code = pthread_create(tid, NULL, func, arg);
-	if (code = 0)
+	if (code == 0)
 		return (SUCCESS);
 	else if (code == EAGAIN)
 		return (puterr("pthread_create: Error: Resource temporarily unavailable\n"));
@@ -52,8 +52,8 @@ int th_join(pthread_t *tid)
 {
 	int	code;
 
-	code = pthread_join(tid, NULL);
-	if (code = 0)
+	code = pthread_join(*tid, NULL);
+	if (code == 0)
 		return (SUCCESS);
 	else if (code == EINVAL)
 		return (puterr("pthread_join: Error: Invalid argument\n"));

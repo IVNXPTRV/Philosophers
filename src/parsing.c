@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 12:31:50 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 12:04:23 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/16 12:46:22 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	parse_input(t_ctx *ctx, int ac, char **av)
 	if (ctx->time_to_die == 0 || ctx->time_to_eat == 0 || ctx->time_to_sleep == 0)
 		return (puterr(ERRNAME"time has to be greater then 0\n"));
 	ctx->philos_full = -1;
-	if (av[5] && ft_atoi(&ctx->philos_full , av[5]) != SUCCESS)
+	if (av[5] && ft_atoi(&ctx->philos_full, av[5]) != SUCCESS)
 		return (ERROR);
 	if (ctx->philos_full == 0)
 		return (puterr(ERRNAME"number of meals can't be 0\n"));

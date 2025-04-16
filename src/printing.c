@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:23:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 11:55:29 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/16 13:05:59 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	put_philo_msg(t_philo *philo, t_time time, char *msg)
 	char	*result;
 	int32_t	status;
 
-	if (get_first_msg_part(philo, time, &result))
+	if (get_first_msg_part(philo, time, &result) != SUCCESS)
 		return (ERROR);
 	msg = ft_strjoin(result, msg);
 	free(result);
@@ -102,7 +102,7 @@ int	put_philo_msg(t_philo *philo, t_time time, char *msg)
 		msg = NULL;
 		return (ERROR);
 	}
-	if (status != RUN && putout(msg) != SUCCESS)
+	if (status == RUN && putout(msg) != SUCCESS)
 	{
 		free(msg);
 		msg = NULL;
