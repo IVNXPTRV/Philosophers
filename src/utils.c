@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:48:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/15 12:50:27 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/16 08:20:25 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,89 @@ size_t	ft_strlen(const char *str)
 }
 
 /**
- * @brief Prints an error message to STDERR.
+ * Allocates memory for an array of 'num' elements of 'size' bytes each and
+ * initializes all bytes in the allocated storage to zero.
  *
- * This function writes a formatted error message to the standard error output.
- *
- * @param msg The error message to print.
- * @return Always returns ERROR.
+ * @param num Number of elements.
+ * @param size Size of each element.
+ * @return A pointer to the allocated memory, or NULL if the allocation fails.
  */
-int	puterr(char *msg)
+void	*ft_calloc(size_t num, size_t size)
 {
-	write(STDERR_FILENO, "philo: ", 7);
-	write(STDERR_FILENO, msg, ft_strlen(msg));
-	write(STDERR_FILENO, "\n", 1);
-	return (ERROR);
-	// dont need to check for error we already almost exited
+	size_t			total;
+	unsigned char	*result;
+
+	if (num == 0 || size == 0)
+	{
+		result = (void *)malloc(0);
+		if (!result)
+			puterr(ERRNAME"malloc: allocation failed\n");
+		return (result);
+	}
+	if (num > SIZE_MAX / size)
+		return (NULL);
+	total = num * size;
+	result = malloc(total);
+	if (!result)
+	{
+		puterr(ERRNAME"malloc: allocation failed\n");
+		return (NULL);
+	}
+	while (total--)
+		*result++ = 0;
+	return ((void *)(result - (num * size)));
 }
 
+/**
+ * @brief Joins two strings into a new string.
+ *
+ * This function allocates memory and concatenates the strings s1 and s2.
+ * The caller is responsible for freeing the allocated memory.
+ * Protects ft_strlener(NULL) from segfault.
+ *
+ * @param s1 The first string.
+ * @param s2 The second string.
+ * @return A pointer to the newly allocated string, or NULL if allocation fails.
+ */
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	size_t	len;
+	char	*result;
+	char	*mem;
 
+	len = ft_strlen(s1) + ft_strlen(s2);
+	result = ft_calloc(len + 1, sizeof(char));
+	if (!result)
+		return (NULL);
+	mem = result;
+	while (*s1)
+		*result++ = *s1++;
+	while (*s2)
+		*result++ = *s2++;
+	return (mem);
+}
+
+/**
+ * Copies 'n' bytes from memory area 'src' to memory area 'dest'.
+ * The memory areas must not overlap.
+ *
+ * @param dest The destination memory area.
+ * @param src The source memory area.
+ * @param n The number of bytes to copy.
+ * @return A pointer to 'dest'.
+ */
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	unsigned char		*d;
+	const unsigned char	*s;
+
+	if (dest == NULL && src == NULL)
+		return (NULL);
+	d = (unsigned char *)dest;
+	s = (const unsigned char *)src;
+	while (n--)
+	{
+		*d++ = *s++;
+	}
+	return (dest);
+}

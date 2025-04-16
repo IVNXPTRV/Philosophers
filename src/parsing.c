@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 12:31:50 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 04:20:16 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/16 09:13:16 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,23 @@
 int	parse_input(t_ctx *ctx, int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
-		return (puterr("wrong number of arguments"));
+		return (puterr(ERRNAME"wrong number of arguments\n"));
 	if (ft_atoi(&ctx->nbr_philos, av[1]) != SUCCESS)
 		return (ERROR);
 	if (ctx->nbr_philos == 0)
-		return (puterr("number of philos has to be greater then 0"));
-	if (ft_atoi(&ctx->time_to_die , av[2]) != SUCCESS)
+		return (puterr(ERRNAME"number of philos has to be greater then 0\n"));
+	if (ft_atoi(&ctx->time_to_die, av[2]) != SUCCESS)
 		return (ERROR);
 	if (ft_atoi(&ctx->time_to_eat, av[3]) != SUCCESS)
 		return (ERROR);
 	if (ft_atoi(&ctx->time_to_sleep, av[4]) != SUCCESS)
 		return (ERROR);
 	if (ctx->time_to_die == 0 || ctx->time_to_eat == 0 || ctx->time_to_sleep == 0)
-		return (puterr("time has to be greater then 0"));
+		return (puterr(ERRNAME"time has to be greater then 0\n"));
 	ctx->nbr_meals = -1;
 	if (av[5] && ft_atoi(&ctx->nbr_meals, av[5]) != SUCCESS)
 		return (ERROR);
 	if (ctx->nbr_meals == 0)
-		return (puterr("number of meals can't be 0"));
+		return (puterr(ERRNAME"number of meals can't be 0\n"));
 	return (SUCCESS);
 }

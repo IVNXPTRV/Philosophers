@@ -6,7 +6,7 @@
 #    By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/05 17:48:31 by vvoronts          #+#    #+#              #
-#    Updated: 2025/04/15 13:00:09 by ipetrov          ###   ########.fr        #
+#    Updated: 2025/04/16 06:06:56 by ipetrov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,8 @@ SRC 				=	\
 						utils.c \
 						numbers.c \
 						parsing.c \
+						printing.c \
+						time.c \
 
 # Object and Dependency files
 OBJ					=	$(SRC:%.c=obj/%.o)
