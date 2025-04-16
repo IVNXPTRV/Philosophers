@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 06:39:58 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 06:12:30 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/16 12:02:41 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,13 @@ int	main(int ac, char **av)
 	memset(&ctx, 0, sizeof(t_ctx));
 	if (parse_input(&ctx, ac, av) != SUCCESS)
 		return (EXIT_FAILURE);
-	init_data(&ctx);
-	// run_simulation(&ctx);
-	// clean(&ctx);
+	if (init_data(&ctx) != SUCCESS)
+		return (EXIT_FAILURE);
+	if (run_simulation(&ctx) != SUCCESS)
+	{
+		clean(&ctx);
+		return (EXIT_FAILURE);
+	}
+	clean(&ctx);
 	return (EXIT_SUCCESS);
 }

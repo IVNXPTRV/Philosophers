@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:21:35 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 09:50:29 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/16 12:07:48 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	allocate_philos(t_ctx *ctx)
 			ctx->philos[i].first_fork = &ctx->forks[0];
 			ctx->philos[i].second_fork = &ctx->forks[i + 1];
 		}
+		ctx->philos[i].meals_to_eat = ctx->philos_full;
 		i++;
 	}
 	return (SUCCESS);

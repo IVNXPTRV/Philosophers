@@ -6,19 +6,11 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 05:59:20 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 09:54:32 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/16 12:07:44 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
-
-// /*
-//  * Cleans everything
-// */
-// void	clean(t_ctx *ctx)
-// {
-// 	// TODO: implement other cleaning here;
-// }
 
 int	clean_ctx(t_ctx **ctx)
 {
@@ -32,7 +24,7 @@ int clean_forks(t_fork **forks)
 	int32_t	i;
 
 	i = 0;
-	while (*forks + i && (*forks)[i].id)
+	while ((*forks)[i].id)
 	{
 		mtx_destroy(&(forks[i])->lock);
 		i++;
@@ -55,5 +47,13 @@ int clean_philos(t_philo **philos)
 	// }
 	free(*philos);
 	*philos = NULL;
+	return (SUCCESS);
+}
+
+int clean(t_ctx *ctx)
+{
+	clean_philos(&ctx->philos);
+	clean_forks(&ctx->forks);
+	clean_ctx(&ctx);
 	return (SUCCESS);
 }

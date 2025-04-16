@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 08:09:48 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 09:55:20 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/16 12:15:59 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	mtx_destroy(t_mtx *mtx)
 	int	code;
 
 	code = pthread_mutex_destroy(mtx);
-	if (code = 0)
+	if (code == 0)
 		return (SUCCESS);
 	else if (code == EINVAL)
 		return (puterr("pthread_mutex_destroy: Error: Invalid argument\n"));
@@ -47,7 +47,7 @@ int	mtx_init(t_mtx *mtx)
 	int	code;
 
 	code = pthread_mutex_init(mtx, NULL);
-	if (code = 0)
+	if (code == 0)
 		return (SUCCESS);
 	else if (code == EINVAL)
 		return (puterr("pthread_mutex_init: Error: Invalid argument\n"));
