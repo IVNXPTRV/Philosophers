@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 12:31:50 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 12:46:22 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 13:03:12 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,26 @@
 int	parse_input(t_ctx *ctx, int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
-		return (puterr(ERRNAME"wrong number of arguments\n"));
-	if (ft_atoi(&ctx->nbr_philos, av[1]) != SUCCESS)
-		return (ERROR);
-	if (ctx->nbr_philos == 0)
-		return (puterr(ERRNAME"number of philos has to be greater then 0\n"));
-	if (ft_atoi(&ctx->time_to_die, av[2]) != SUCCESS)
-		return (ERROR);
-	if (ft_atoi(&ctx->time_to_eat, av[3]) != SUCCESS)
-		return (ERROR);
-	if (ft_atoi(&ctx->time_to_sleep, av[4]) != SUCCESS)
-		return (ERROR);
+		return (puterr(PRNME"wrong number of arguments\n"));
+	if (ft_atoi(&ctx->num_philos, av[1]) != OK)
+		return (ER);
+	if (ctx->num_philos == 0)
+		return (puterr(PRNME"number of philos has to be greater then 0\n"));
+	if (ft_atoi(&ctx->time_to_die, av[2]) != OK)
+		return (ER);
+	if (ft_atoi(&ctx->time_to_eat, av[3]) != OK)
+		return (ER);
+	if (ft_atoi(&ctx->time_to_sleep, av[4]) != OK)
+		return (ER);
 	if (ctx->time_to_die == 0 || ctx->time_to_eat == 0 || ctx->time_to_sleep == 0)
-		return (puterr(ERRNAME"time has to be greater then 0\n"));
+		return (puterr(PRNME"time has to be greater then 0\n"));
 	ctx->philos_full = -1;
-	if (av[5] && ft_atoi(&ctx->philos_full, av[5]) != SUCCESS)
-		return (ERROR);
+	if (av[5] && ft_atoi(&ctx->philos_full, av[5]) != OK)
+		return (ER);
 	if (ctx->philos_full == 0)
-		return (puterr(ERRNAME"number of meals can't be 0\n"));
-	return (SUCCESS);
+		return (puterr(PRNME"number of meals can't be 0\n"));
+	ctx->time_to_die *= 1e3; // convert input to microseconds
+	ctx->time_to_eat *= 1e3; // convert input to microseconds
+	ctx->time_to_sleep *= 1e3; // convert input to microseconds
+	return (OK);
 }

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 03:05:35 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 13:05:21 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,138 +14,139 @@
 
 static int wait_simulation_begin(t_ctx *ctx)
 {
-	int64_t	status;
+	t_int	status;
 
 	status = true;
 	while (status)
 	{
-		if (get_val(&ctx->lock, &ctx->status, &status, sizeof(int64_t)) != SUCCESS)
-			return (ERROR);
+		if (get_val(&ctx->lock, &ctx->status, &status) != OK)
+			return (ER);
 	}
-	return (SUCCESS);
+	return (OK);
 }
 
 static int philo_takes_forks(t_philo *philo)
 {
 	t_time	time;
 
-	if (mtx_lock(&philo->first_fork->lock) != SUCCESS) // take fork1
-		return (ERROR);
-	if (get_time(&time, philo->ctx->start_time) != SUCCESS)
-		return (ERROR);
+	if (mtx_lock(&philo->first_fork->lock) != OK) // take fork1
+		return (ER);
+	if (get_time(&time, philo->ctx->start_time) != OK)
+		return (ER);
 	if (DEBUG)
 		mtx_printf("has taken a fork [%ld]\n", time, philo->id, philo->first_fork->id);
-	else if (put_philo_msg(philo, time, "has taken a fork\n") != SUCCESS)
-		return (ERROR);
-	if (mtx_lock(&philo->second_fork->lock) != SUCCESS) // take fork2
-		return (ERROR);
-	if (get_time(&time, philo->ctx->start_time) != SUCCESS)
-		return (ERROR);
+	else if (put_philo_msg(philo, time, "has taken a fork\n") != OK)
+		return (ER);
+	if (mtx_lock(&philo->second_fork->lock) != OK) // take fork2
+		return (ER);
+	if (get_time(&time, philo->ctx->start_time) != OK)
+		return (ER);
 	if (DEBUG)
 		mtx_printf("has taken a fork [%ld]\n", time, philo->id, philo->second_fork->id);
-	else if (put_philo_msg(philo, time, "has taken a fork\n") != SUCCESS)
-		return (ERROR);
-	return (SUCCESS);
+	else if (put_philo_msg(philo, time, "has taken a fork\n") != OK)
+		return (ER);
+	return (OK);
 }
 
 static int philo_puts_forks(t_philo *philo)
 {
-
-	if (mtx_unlock(&philo->first_fork->lock) != SUCCESS)
-		return (ERROR);
-	if (mtx_unlock(&philo->second_fork->lock) != SUCCESS)
-		return (ERROR);
-	return (SUCCESS);
+	if (mtx_unlock(&philo->first_fork->lock) != OK)
+		return (ER);
+	if (mtx_unlock(&philo->second_fork->lock) != OK)
+		return (ER);
+	return (OK);
 }
 
 static int philo_eats_or_dies(t_philo *philo)
 {
-	t_time	time;
+	// t_time	timestamp;
+	t_time	time;			//
 
-	if (get_time(&time, philo->ctx->start_time) != SUCCESS)
-		return (ERROR);
+	if (get_time(&time, philo->last_meal_time) != OK)
+		return (ER);
 	if (time <= philo->ctx->time_to_die) // TODO: check if less ot less or equal
 	{
-		if (put_philo_msg(philo, time, "is eating\n") != SUCCESS)
-			return (ERROR);
-		if (philo_wait(philo->ctx->time_to_eat) != SUCCESS)
-			return (ERROR);
+		philo->last_meal_time = time;
+		if (put_philo_msg(philo, time, "is eating\n") != OK)
+			return (ER);
+		if (philo_wait(philo->ctx->time_to_eat) != OK)
+			return (ER);
 	}
 	else
 	{
-		if (put_philo_msg(philo, time, "died\n") != SUCCESS)
-			return (ERROR);
-		if (set_val(&philo->ctx->lock, &philo->ctx->status, &(int64_t){DIED}, sizeof(int64_t)) != SUCCESS)
-			return (ERROR);
+		if (put_philo_msg(philo, time, "died\n") != OK)
+			return (ER);
+		if (set_val(&philo->ctx->lock, &philo->ctx->status, &(t_int){DIED}) != OK)
+			return (ER);
 	}
-	if (philo_puts_forks(philo) != SUCCESS)
-		return (ERROR);
-	return (SUCCESS);
+	if (philo_puts_forks(philo) != OK)
+		return (ER);
+	return (OK);
 }
 
 static int philo_sleeps(t_philo *philo)
 {
 	t_time	time;
 
-	if (get_time(&time, philo->ctx->start_time) != SUCCESS)
-		return (ERROR);
-	if (put_philo_msg(philo, time, "is sleeping\n") != SUCCESS)
-		return (ERROR);
-	if (philo_wait(philo->ctx->time_to_sleep) != SUCCESS)
-		return (ERROR);
-	return (SUCCESS);
+	if (get_time(&time, philo->ctx->start_time) != OK)
+		return (ER);
+	if (put_philo_msg(philo, time, "is sleeping\n") != OK)
+		return (ER);
+	if (philo_wait(philo->ctx->time_to_sleep) != OK)
+		return (ER);
+	return (OK);
 }
 
 static int philo_thinks(t_philo *philo)
 {
 	t_time	time;
 
-	if (get_time(&time, philo->ctx->start_time) != SUCCESS)
-		return (ERROR);
-	if (put_philo_msg(philo, time, "is thinking\n") != SUCCESS)
-		return (ERROR);
-	if (philo_wait(1) != SUCCESS) 	// wait a little bit to prevent startvation??
-		return (ERROR);
-	return (SUCCESS);
+	if (get_time(&time, philo->ctx->start_time) != OK)
+		return (ER);
+	if (put_philo_msg(philo, time, "is thinking\n") != OK)
+		return (ER);
+	if (philo_wait(1) != OK) 	// wait a little bit to prevent startvation??
+		return (ER);
+	return (OK);
 }
 
-static int is_end(t_philo *philo, int64_t *status)
+static int is_end(t_philo *philo, t_int *status)
 {
-	int64_t	ctx_sts;
+	t_int	ctx_sts;
 
-	if (get_val(&philo->ctx->lock, &philo->ctx->status, &ctx_sts, sizeof(int64_t)) != SUCCESS)
-		return (ERROR);
+	if (get_val(&philo->ctx->lock, &philo->ctx->status, &ctx_sts) != OK)
+		return (ER);
 	if (ctx_sts != RUN)
 		*status = ctx_sts;
-	return (SUCCESS);
+	return (OK);
 }
 
 void	*philo_routine(void *ptr)
 {
 	t_philo	*philo;
-	int64_t	status;
+	t_int	status;
 
 	philo = (t_philo *)ptr;
-	if (wait_simulation_begin(philo->ctx) != SUCCESS)
+	if (wait_simulation_begin(philo->ctx) != OK)
 	{
-		set_val(&philo->ctx->lock, &philo->ctx->status, &(int64_t){ERROR}, sizeof(int64_t));
-		return ((void *)ERROR);
+		set_val(&philo->ctx->lock, &philo->ctx->status, &(t_int){ER});
+		return ((void *)ER);
 	}
 	status = RUN;
 	while (status == RUN)
 	{
-		if (philo_takes_forks(philo) != SUCCESS) // take both forks
-			return (ERRPTR);
-		else if (philo_eats_or_dies(philo) != SUCCESS) // eats and checks if too late
-			return (ERRPTR);
-		else if (is_end(philo, &status) != SUCCESS) // check if anyone dead or any errors
-			return (ERRPTR);
-		else if (philo_sleeps(philo) != SUCCESS) // sleep
-			return (ERRPTR);
-		else if (philo_thinks(philo) != SUCCESS) // think
-			return (ERRPTR);
+		if (philo_takes_forks(philo) != OK) // take both forks
+			return (ERPTR);
+		else if (philo_eats_or_dies(philo) != OK) // eats and checks if too late
+			return (ERPTR);
+		else if (is_end(philo, &status) != OK) // check if anyone dead or any ERs
+			return (ERPTR);
+		else if (philo_sleeps(philo) != OK) // sleep
+			return (ERPTR);
+		else if (philo_thinks(philo) != OK) // think
+			return (ERPTR);
 	}
-	return (SUCPTR);
+	return (OKPTR);
 }
 
 /**
@@ -159,26 +160,27 @@ void	*philo_routine(void *ptr)
  */
 int run_simulation(t_ctx *ctx)
 {
-	int64_t	status;
+	t_int	status;
 
-	if (get_time(&ctx->start_time, 0) != SUCCESS)
-		return (ERROR);
-	if (set_val(&ctx->lock, &ctx->status, &(int64_t){RUN}, sizeof(int64_t)) != SUCCESS)
-		return (ERROR);
+	if (get_time(&ctx->start_time, 0) != OK)
+		return (ER);
+	if (set_val(&ctx->lock, &ctx->status, &(t_int){RUN}) != OK)
+		return (ER);
 	while (true)
 	{
-		if (get_val(&ctx->lock, &ctx->status, &status, sizeof(int64_t)) != SUCCESS)
-			return (ERROR);
+		if (get_val(&ctx->lock, &ctx->status, &status) != OK) // get status of simulation
+			return (ER);
 		if (status == DIED) // check if anyone died -- check status if 2, someone died
-			return (SUCCESS);
-		else if (status == ERROR) // check if any error reported to finish execution
-			return (ERROR);
-		if (ctx->philos_full == -1) //check if we had number of meals in arguments
+			return (OK);
+		else if (status == ER) // check if any ER reported to finish execution
+			return (ER);
+		if (ctx->philos_full == -1) // check if we had number of meals in arguments
 			continue ;
-		if (get_val(&ctx->lock, &ctx->philos_full, &status, sizeof(int64_t)) != SUCCESS)
-			return (ERROR);
-		if (status == ctx->nbr_philos) // check if all full
-			return (SUCCESS);
+		if (get_val(&ctx->lock, &ctx->philos_full, &status) != OK) // get number of full philos
+			return (ER);
+		if (status == ctx->num_philos) // check if all full
+			return (OK);
 	}
-	return (SUCCESS);
+	return (OK);
 }
+// DIED, FULL, ER

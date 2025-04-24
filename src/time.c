@@ -6,53 +6,71 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:44:38 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 02:21:06 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 13:09:40 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
 /**
- * @brief Retrieves the time elapsed in milliseconds since the simulation started.
+ * @brief Retrieves the time elapsed in microseconds since the starting point
  *
  *	RETURN
- *		A 0 return value indicates that the call succeeded.  A -1 return value indicates an error occurred, and in this case an error code is stored into the global variable errno.
- *	ERRORS
- *		The following error codes may be set in errno:
+ *		A 0 return value indicates that the call succeeded.  A -1 return value indicates an ER occurred, and in this case an ER code is stored into the global variable errno.
+ *	ERS
+ *		The following ER codes may be set in errno:
  *		[EFAULT]  An argument address referenced invalid memory. / Error: Bad address
  *		[EPERM]   A user other than the super-user attempted to set the time / Error: Operation not permitted
- * @param[out] timestamp The current timestamp in milliseconds since the simulation began.
- * @param start_time The timestamp in milliseconds marking the start of the simulation.
+ * @param[out] timestamp The current timestamp in microseconds since the simulation began.
+ * @param start_time The timestamp in microseconds marking the start of the simulation.
  * @return Status code.
  */
 int	get_time(t_time *timestamp, t_time start_time)
 {
 	struct timeval tv;
 
-	if (gettimeofday(&tv, NULL) == ERROR)
+	if (gettimeofday(&tv, NULL) == ER)
 	{
 		if (errno == EFAULT)
-			return (puterr(ERRNAME"gettimeofday: Error: Bad address\n"));
+			return (puterr(PRNME"gettimeofday: Error: Bad address\n"));
 		else if (errno == EPERM)
-			return (puterr(ERRNAME"gettimeofday: Error: Operation not permitted\n"));
+			return (puterr(PRNME"gettimeofday: Error: Operation not permitted\n"));
 	}
-	*timestamp = (tv.tv_sec * 1e3) + (tv.tv_usec / 1e3) - start_time;
-	return (SUCCESS);
+	*timestamp = (tv.tv_sec * 1e6) + tv.tv_usec - start_time;
+	return (OK);
 }
 
 /**
- * @brief
+ * @brief Precise sleep, more accurate then usleep
  * RETURN VALUES
- *  The usleep() function returns the value 0 if successful; otherwise the value -1 is returned and the global variable errno is set to indicate the error.
- * ERRORS
+ *  The usleep() function returns the value 0 if OKful; otherwise the value -1 is returned and the global variable errno is set to indicate the ER.
+ * ERS
  *  The usleep() function will fail if:
  *  [EINTR]            A signal was delivered to the process and its action was to invoke a signal-catching function. / Error: Interrupted system call
  * @param time
  * @return int
  */
-int	philo_wait(t_time time)
+int	psleep(t_time waittime)
 {
-	if (usleep(time * 1e3) == ERROR)
-		return (puterr("usleep: Error: Interrupted system call\n"));
-	return (SUCCESS);
+	t_time	start;
+	t_time	now;
+	t_time	rem;
+
+	if (get_time(&start, 0) != OK)
+		return (ER);
+	rem = waittime;
+	while (rem > 1e3)
+	{
+		if (usleep(rem / 2) == ER)
+			return (puterr("usleep: Error: Interrupted system call\n"));
+		if (get_time(&now, 0) != OK)
+			return (ER);
+		rem = waittime - now - start;
+	}
+	while (now - start < waittime)
+	{
+		if (get_time(&now, 0) != OK)
+			return (ER);
+	}
+	return (OK);
 }

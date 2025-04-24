@@ -6,13 +6,11 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:21:35 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 02:23:04 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 13:05:21 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
-
-
 
 /**
  * @brief Allocate all philos, init all members except of ptid
@@ -23,17 +21,17 @@
  */
 int	allocate_philos(t_ctx *ctx)
 {
-	int64_t	i;
+	t_int	i;
 
-	ctx->philos = ft_calloc(ctx->nbr_philos + 1, sizeof(t_philo));
+	ctx->philos = ft_calloc(ctx->num_philos + 1, sizeof(t_philo));
 	if (!ctx->philos)
-		return (ERROR);
+		return (ER);
 	i = 0;
-	while (i < ctx->nbr_philos)
+	while (i < ctx->num_philos)
 	{
 		ctx->philos[i].id = i + 1;
 		ctx->philos[i].ctx = ctx;
-		if (ctx->philos[i].id < ctx->nbr_philos - 1)
+		if (ctx->philos[i].id < ctx->num_philos)
 		{
 			ctx->philos[i].first_fork = &ctx->forks[i];
 			ctx->philos[i].second_fork = &ctx->forks[i + 1];
@@ -41,33 +39,33 @@ int	allocate_philos(t_ctx *ctx)
 		else
 		{
 			ctx->philos[i].first_fork = &ctx->forks[0];
-			ctx->philos[i].second_fork = &ctx->forks[i + 1];
+			ctx->philos[i].second_fork = &ctx->forks[i];
 		}
 		ctx->philos[i].meals_to_eat = ctx->philos_full;
 		i++;
 	}
-	return (SUCCESS);
+	return (OK);
 }
 
 int	allocate_forks(t_ctx *ctx)
 {
-	int64_t	i;
+	t_int	i;
 
-	ctx->forks = ft_calloc(ctx->nbr_philos + 1, sizeof(t_fork));
+	ctx->forks = ft_calloc(ctx->num_philos + 1, sizeof(t_fork));
 	if (!ctx->forks)
-		return (ERROR);
+		return (ER);
 	i = 0;
-	while (i < ctx->nbr_philos)
+	while (i < ctx->num_philos)
 	{
 		ctx->forks[i].id = i + 1;
-		if (mtx_init(&ctx->forks[i].lock) != SUCCESS)
+		if (mtx_init(&ctx->forks[i].lock) != OK)
 		{
 			clean_forks(&ctx->forks);
-			return (ERROR);
+			return (ER);
 		}
 		i++;
 	}
-	return (SUCCESS);
+	return (OK);
 }
 
 
@@ -79,16 +77,16 @@ int	allocate_forks(t_ctx *ctx)
  */
 int	attach_philos(t_ctx *ctx)
 {
-	int64_t	i;
+	t_int	i;
 
 	i = 0;
-	while (i < ctx->nbr_philos)
+	while (i < ctx->num_philos)
 	{
-		if (th_create(&ctx->philos[i].tid, philo_routine, &ctx->philos[i]) != SUCCESS)
-			return (ERROR); // some shut down mutex force all threads wait util main thread clean eveything and exit
+		if (th_create(&ctx->philos[i].tid, philo_routine, &ctx->philos[i]) != OK)
+			return (ER); // some shut down mutex force all threads wait util main thread clean eveything and exit
 		i++;
 	}
-	return (SUCCESS);
+	return (OK);
 }
 
 /**
@@ -98,10 +96,10 @@ int	attach_philos(t_ctx *ctx)
  */
 int	init_ctx(t_ctx *ctx)
 {
-	if (mtx_init(&ctx->lock) != SUCCESS)
-		return (ERROR);
+	if (mtx_init(&ctx->lock) != OK)
+		return (ER);
 	ctx->status = WAIT;
-	return (SUCCESS);
+	return (OK);
 }
 
 /*
@@ -110,27 +108,27 @@ int	init_ctx(t_ctx *ctx)
 */
 int	init_data(t_ctx *ctx)
 {
-	if (init_ctx(ctx) != SUCCESS)
-		return (ERROR);
-	if (allocate_forks(ctx) != SUCCESS)
+	if (init_ctx(ctx) != OK)
+		return (ER);
+	if (allocate_forks(ctx) != OK)
 	{
 		clean_ctx(&ctx);
-		return (ERROR);
+		return (ER);
 	}
-	if (allocate_philos(ctx) != SUCCESS)
+	if (allocate_philos(ctx) != OK)
 	{
 		clean_forks(&ctx->forks);
 		clean_ctx(&ctx);
-		return (ERROR);
+		return (ER);
 	}
-	if (attach_philos(ctx) != SUCCESS)
+	if (attach_philos(ctx) != OK)
 	{
 		clean_philos(&ctx->philos);
 		clean_forks(&ctx->forks);
 		clean_ctx(&ctx);
-		return (ERROR);
+		return (ER);
 	}
 	if (ctx->philos_full != -1)
 		ctx->philos_full = 0;
-	return (SUCCESS);
+	return (OK);
 }

@@ -6,7 +6,7 @@
 #    By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/05 17:48:31 by vvoronts          #+#    #+#              #
-#    Updated: 2025/04/16 12:06:30 by ipetrov          ###   ########.fr        #
+#    Updated: 2025/04/24 11:43:10 by ipetrov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,11 +22,9 @@ NAME				=	philo
 INCLUDE_DIRS		=	\
 						./include \
 
-
 # Source directories
 VPATH				=	\
 						./src/:\
-
 
 # Include flags
 INCLUDE				=	$(addprefix -I, $(INCLUDE_DIRS))
@@ -49,21 +47,18 @@ SRC 				=	\
 OBJ					=	$(SRC:%.c=obj/%.o)
 DEP					=	$(SRC:%.c=dep/%.d)
 
-# Make flags
-MFLAGS				=	 --no-print-directory -C
-
 # Build all targets
 all: $(NAME)
 
 # Link mandatory object files
 $(NAME): $(OBJ)
 	@echo "Building $(NAME) ..."
-	@$(CC) $(OBJ) $(LIB) -o $@
+	@$(CC) $(OBJ) -o $@
 	@echo "$(NAME) has been built"
 
 # Compile mandatory object files
 obj/%.o: %.c | obj_dir dep_dir
-	@$(CC) $(CFLAGS) dep/$(@:obj/%.o=%.d) $(INCLUDE) -c $< -o $@ && printf "Compiling: $(notdir $< \n)"
+	$(CC) $(CFLAGS) dep/$(@:obj/%.o=%.d) $(INCLUDE) -c $< -o $@
 
 # Create mandatory object directories
 obj_dir:
@@ -87,7 +82,7 @@ fclean: clean
 re: fclean all
 
 # Phony targets
-.PHONY: all clean fclean re lib
+.PHONY: all clean fclean re
 .DEFAULT_GOAL := all
 
 # Include the dependency files

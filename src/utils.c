@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:48:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 08:20:25 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 11:20:25 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	*ft_calloc(size_t num, size_t size)
 	{
 		result = (void *)malloc(0);
 		if (!result)
-			puterr(ERRNAME"malloc: allocation failed\n");
+			puterr(PRNME"malloc: allocation failed\n");
 		return (result);
 	}
 	if (num > SIZE_MAX / size)
@@ -59,7 +59,7 @@ void	*ft_calloc(size_t num, size_t size)
 	result = malloc(total);
 	if (!result)
 	{
-		puterr(ERRNAME"malloc: allocation failed\n");
+		puterr(PRNME"malloc: allocation failed\n");
 		return (NULL);
 	}
 	while (total--)

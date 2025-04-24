@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 06:39:58 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 12:46:29 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 12:56:14 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ int	main(int ac, char **av)
 	t_ctx	ctx;
 
 	memset(&ctx, 0, sizeof(t_ctx));
-	if (parse_input(&ctx, ac, av) != SUCCESS)
+	if (parse_input(&ctx, ac, av) != OK)
 		return (EXIT_FAILURE);
-	if (init_data(&ctx) != SUCCESS)
+	if (init_data(&ctx) != OK)
 		return (EXIT_FAILURE);
-	if (run_simulation(&ctx) != SUCCESS)
+	if (run_simulation(&ctx) != OK)
 	{
 		clean(&ctx);
 		return (EXIT_FAILURE);
@@ -35,3 +35,16 @@ int	main(int ac, char **av)
 	clean(&ctx);
 	return (EXIT_SUCCESS);
 }
+
+// // tester for philo_wait
+// int	main()
+// {
+// 	t_time start;
+// 	t_time end;
+
+// 	get_time(&start, 0);
+// 	philo_wait(10000);
+// 	get_time(&end, 0);
+// 	printf("real wait: %ld\n", end - start);
+// 	return (EXIT_SUCCESS);
+// }

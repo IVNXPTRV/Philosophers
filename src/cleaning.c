@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 05:59:20 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 02:23:04 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 13:05:21 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ int	clean_ctx(t_ctx **ctx)
 {
 	mtx_destroy(&(*ctx)->lock);
 	*ctx = NULL;
-	return (SUCCESS);
+	return (OK);
 }
 
 int clean_forks(t_fork **forks)
 {
-	int64_t	i;
+	t_int	i;
 
 	i = 0;
 	while ((*forks)[i].id)
@@ -31,13 +31,13 @@ int clean_forks(t_fork **forks)
 	}
 	free(*forks);
 	*forks = NULL;
-	return (SUCCESS);
+	return (OK);
 }
 
 // add mtx destroy
 int clean_philos(t_philo **philos)
 {
-	// int64_t	i;
+	// t_int	i;
 
 	// i = 0;
 	// while (*philos + i)
@@ -47,7 +47,7 @@ int clean_philos(t_philo **philos)
 	// }
 	free(*philos);
 	*philos = NULL;
-	return (SUCCESS);
+	return (OK);
 }
 
 int clean(t_ctx *ctx)
@@ -55,5 +55,5 @@ int clean(t_ctx *ctx)
 	clean_philos(&ctx->philos);
 	clean_forks(&ctx->forks);
 	clean_ctx(&ctx);
-	return (SUCCESS);
+	return (OK);
 }

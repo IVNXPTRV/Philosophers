@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 09:25:24 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 12:37:48 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 11:22:19 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 /**
  *	RETURN VALUES
- *		If successful, the pthread_create() function will return zero.  Otherwise an error number will be returned to indicate the error.
- *	ERRORS
+ *		If OKful, the pthread_create() function will return zero.  Otherwise an ER number will be returned to indicate the ER.
+ *	ERS
  *		The pthread_create() function will fail if:
  *		[EAGAIN]           The system lacked the necessary resources to create another thread, / Error: Resource temporarily unavailable
  *		or the system-imposed limit on the total number of threads in a process [PTHREAD_THREADS_MAX] would be exceeded.
@@ -28,7 +28,7 @@ int th_create(pthread_t *tid, void *func(void *), void *arg)
 
 	code = pthread_create(tid, NULL, func, arg);
 	if (code == 0)
-		return (SUCCESS);
+		return (OK);
 	else if (code == EAGAIN)
 		return (puterr("pthread_create: Error: Resource temporarily unavailable\n"));
 	else if (code == EPERM)
@@ -36,13 +36,13 @@ int th_create(pthread_t *tid, void *func(void *), void *arg)
 	else if (code == EINVAL)
 		return (puterr("pthread_create: Error: Invalid argument\n"));
 	else
-		return (ERROR);
+		return (ER);
 }
 
 /**
  *	RETURN VALUES
- *		If successful, the pthread_join() function will return zero.  Otherwise, an error number will be returned to indicate the error.
- *	ERRORS
+ *		If OKful, the pthread_join() function will return zero.  Otherwise, an ER number will be returned to indicate the ER.
+ *	ERS
  *		The pthread_join() function will fail if:
  *		[EINVAL]           The implementation has detected that the value specified by thread does not refer to a joinable thread. / Error: Invalid argument
  *		[ESRCH]            No thread could be found corresponding to that specified by the given thread ID, thread. / Error: No such process
@@ -54,7 +54,7 @@ int th_join(pthread_t *tid)
 
 	code = pthread_join(*tid, NULL);
 	if (code == 0)
-		return (SUCCESS);
+		return (OK);
 	else if (code == EINVAL)
 		return (puterr("pthread_join: Error: Invalid argument\n"));
 	else if (code == ESRCH)
@@ -62,5 +62,5 @@ int th_join(pthread_t *tid)
 	else if (code == EDEADLK)
 		return (puterr("pthread_join: Error: Resource deadlock avoided\n"));
 	else
-		return (ERROR);
+		return (ER);
 }
