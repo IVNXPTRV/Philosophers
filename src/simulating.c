@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 02:23:04 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 03:05:35 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,31 @@ static int philo_takes_forks(t_philo *philo)
 {
 	t_time	time;
 
-	if (mtx_lock(&philo->first_fork->lock) != SUCCESS)//take fork1
+	if (mtx_lock(&philo->first_fork->lock) != SUCCESS) // take fork1
 		return (ERROR);
 	if (get_time(&time, philo->ctx->start_time) != SUCCESS)
 		return (ERROR);
-	if (put_philo_msg(philo, time, "has taken a fork\n") != SUCCESS)
+	if (DEBUG)
+		mtx_printf("has taken a fork [%ld]\n", time, philo->id, philo->first_fork->id);
+	else if (put_philo_msg(philo, time, "has taken a fork\n") != SUCCESS)
 		return (ERROR);
-	if (mtx_lock(&philo->second_fork->lock) != SUCCESS)//take fork2
+	if (mtx_lock(&philo->second_fork->lock) != SUCCESS) // take fork2
 		return (ERROR);
 	if (get_time(&time, philo->ctx->start_time) != SUCCESS)
 		return (ERROR);
-	if (put_philo_msg(philo, time, "has taken a fork\n") != SUCCESS)
+	if (DEBUG)
+		mtx_printf("has taken a fork [%ld]\n", time, philo->id, philo->second_fork->id);
+	else if (put_philo_msg(philo, time, "has taken a fork\n") != SUCCESS)
+		return (ERROR);
+	return (SUCCESS);
+}
+
+static int philo_puts_forks(t_philo *philo)
+{
+
+	if (mtx_unlock(&philo->first_fork->lock) != SUCCESS)
+		return (ERROR);
+	if (mtx_unlock(&philo->second_fork->lock) != SUCCESS)
 		return (ERROR);
 	return (SUCCESS);
 }
@@ -64,6 +78,8 @@ static int philo_eats_or_dies(t_philo *philo)
 		if (set_val(&philo->ctx->lock, &philo->ctx->status, &(int64_t){DIED}, sizeof(int64_t)) != SUCCESS)
 			return (ERROR);
 	}
+	if (philo_puts_forks(philo) != SUCCESS)
+		return (ERROR);
 	return (SUCCESS);
 }
 
@@ -86,10 +102,9 @@ static int philo_thinks(t_philo *philo)
 
 	if (get_time(&time, philo->ctx->start_time) != SUCCESS)
 		return (ERROR);
-	// wait a little bit to prevent startvation??
 	if (put_philo_msg(philo, time, "is thinking\n") != SUCCESS)
 		return (ERROR);
-	if (philo_wait(1) != SUCCESS)
+	if (philo_wait(1) != SUCCESS) 	// wait a little bit to prevent startvation??
 		return (ERROR);
 	return (SUCCESS);
 }
@@ -121,7 +136,7 @@ void	*philo_routine(void *ptr)
 	{
 		if (philo_takes_forks(philo) != SUCCESS) // take both forks
 			return (ERRPTR);
-		else if (philo_eats_or_dies(philo) != SUCCESS) // eats and check if too late
+		else if (philo_eats_or_dies(philo) != SUCCESS) // eats and checks if too late
 			return (ERRPTR);
 		else if (is_end(philo, &status) != SUCCESS) // check if anyone dead or any errors
 			return (ERRPTR);
@@ -158,7 +173,7 @@ int run_simulation(t_ctx *ctx)
 			return (SUCCESS);
 		else if (status == ERROR) // check if any error reported to finish execution
 			return (ERROR);
-		if (ctx->philos_full == -1)
+		if (ctx->philos_full == -1) //check if we had number of meals in arguments
 			continue ;
 		if (get_val(&ctx->lock, &ctx->philos_full, &status, sizeof(int64_t)) != SUCCESS)
 			return (ERROR);

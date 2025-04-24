@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 08:09:48 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 12:15:59 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 02:29:07 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	mtx_unlock(t_mtx *lock)
 }
 
 /**
- * @brief Set the val object
+ * @brief Set the val object atomically
  *
  * @param lock
  * @param var - variable to write data to
@@ -123,7 +123,7 @@ int	set_val(t_mtx *lock, void *var, void *src, size_t size_of)
 }
 
 /**
- * @brief Get the val object
+ * @brief Get the val object atomically
  *
  * @param lock
  * @param var - variable to read data from

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:23:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 02:23:04 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 02:55:52 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,17 @@ int	put_philo_msg(t_philo *philo, t_time time, char *msg)
 	}
 	free(msg);
 	msg = NULL;
+	return (SUCCESS);
+}
+
+int	mtx_printf(char *msg, t_time time, int64_t id, int64_t arg)
+{
+	static t_mtx	lock = PTHREAD_MUTEX_INITIALIZER;
+
+	mtx_lock(&lock);
+	printf("%ld %ld ", time, id);
+	printf(msg, arg);
+	mtx_unlock(&lock);
 	return (SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 02:23:04 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 02:56:50 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <errno.h> // EINVAL and otehr codes
 
 #define ERROR -1
+#define DEBUG true
 #define SUCCESS 1
 #define DIED 2
 #define WAIT 1
@@ -94,7 +95,8 @@ void	*ft_memcpy(void *dest, const void *src, size_t n);
  * PRINT
  */
 int		puterr(char *msg);
-int	put_philo_msg(t_philo *philo, t_time time, char *msg);
+int		put_philo_msg(t_philo *philo, t_time time, char *msg);
+int	mtx_printf(char *msg, t_time time, int64_t id, int64_t arg);
 
 
 /**
