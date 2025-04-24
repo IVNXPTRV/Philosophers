@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 13:01:12 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 02:23:04 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 static int wait_simulation_begin(t_ctx *ctx)
 {
-	int32_t	status;
+	int64_t	status;
 
 	status = true;
 	while (status)
 	{
-		if (get_val(&ctx->lock, &ctx->status, &status, sizeof(int32_t)) != SUCCESS)
+		if (get_val(&ctx->lock, &ctx->status, &status, sizeof(int64_t)) != SUCCESS)
 			return (ERROR);
 	}
 	return (SUCCESS);
@@ -61,7 +61,7 @@ static int philo_eats_or_dies(t_philo *philo)
 	{
 		if (put_philo_msg(philo, time, "died\n") != SUCCESS)
 			return (ERROR);
-		if (set_val(&philo->ctx->lock, &philo->ctx->status, &(int32_t){DIED}, sizeof(int32_t)) != SUCCESS)
+		if (set_val(&philo->ctx->lock, &philo->ctx->status, &(int64_t){DIED}, sizeof(int64_t)) != SUCCESS)
 			return (ERROR);
 	}
 	return (SUCCESS);
@@ -94,11 +94,11 @@ static int philo_thinks(t_philo *philo)
 	return (SUCCESS);
 }
 
-static int is_end(t_philo *philo, int32_t *status)
+static int is_end(t_philo *philo, int64_t *status)
 {
-	int32_t	ctx_sts;
+	int64_t	ctx_sts;
 
-	if (get_val(&philo->ctx->lock, &philo->ctx->status, &ctx_sts, sizeof(int32_t)) != SUCCESS)
+	if (get_val(&philo->ctx->lock, &philo->ctx->status, &ctx_sts, sizeof(int64_t)) != SUCCESS)
 		return (ERROR);
 	if (ctx_sts != RUN)
 		*status = ctx_sts;
@@ -108,12 +108,12 @@ static int is_end(t_philo *philo, int32_t *status)
 void	*philo_routine(void *ptr)
 {
 	t_philo	*philo;
-	int32_t	status;
+	int64_t	status;
 
 	philo = (t_philo *)ptr;
 	if (wait_simulation_begin(philo->ctx) != SUCCESS)
 	{
-		set_val(&philo->ctx->lock, &philo->ctx->status, &(int32_t){ERROR}, sizeof(int32_t));
+		set_val(&philo->ctx->lock, &philo->ctx->status, &(int64_t){ERROR}, sizeof(int64_t));
 		return ((void *)ERROR);
 	}
 	status = RUN;
@@ -144,15 +144,15 @@ void	*philo_routine(void *ptr)
  */
 int run_simulation(t_ctx *ctx)
 {
-	int32_t	status;
+	int64_t	status;
 
 	if (get_time(&ctx->start_time, 0) != SUCCESS)
 		return (ERROR);
-	if (set_val(&ctx->lock, &ctx->status, &(int32_t){RUN}, sizeof(int32_t)) != SUCCESS)
+	if (set_val(&ctx->lock, &ctx->status, &(int64_t){RUN}, sizeof(int64_t)) != SUCCESS)
 		return (ERROR);
 	while (true)
 	{
-		if (get_val(&ctx->lock, &ctx->status, &status, sizeof(int32_t)) != SUCCESS)
+		if (get_val(&ctx->lock, &ctx->status, &status, sizeof(int64_t)) != SUCCESS)
 			return (ERROR);
 		if (status == DIED) // check if anyone died -- check status if 2, someone died
 			return (SUCCESS);
@@ -160,7 +160,7 @@ int run_simulation(t_ctx *ctx)
 			return (ERROR);
 		if (ctx->philos_full == -1)
 			continue ;
-		if (get_val(&ctx->lock, &ctx->philos_full, &status, sizeof(int32_t)) != SUCCESS)
+		if (get_val(&ctx->lock, &ctx->philos_full, &status, sizeof(int64_t)) != SUCCESS)
 			return (ERROR);
 		if (status == ctx->nbr_philos) // check if all full
 			return (SUCCESS);

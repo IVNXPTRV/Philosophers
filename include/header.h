@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 12:26:21 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 02:23:04 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,16 @@ enum e_atoi_codes
 
 typedef struct s_fork
 {
-	int32_t	id;
+	int64_t	id;
 	t_mtx	lock;
 } t_fork;
 
-typedef int32_t t_time;
+typedef int64_t t_time;
 
 typedef struct s_philo
 {
-	int32_t			id;
-	int32_t 		meals_to_eat;		// -1 if not provided, otherwise N to eat
+	int64_t			id;
+	int64_t 		meals_to_eat;		// -1 if not provided, otherwise N to eat
 	t_ctx 			*ctx;
 	pthread_t		tid; 				// thread id
 	t_fork			*first_fork;		// left
@@ -67,13 +67,13 @@ typedef struct s_philo
 */
 typedef struct s_ctx
 {
-	int32_t			status;				// coordinate whole program to start or to end 2 - someone died, 1 - wait, 0 - run, -1 - error
+	int64_t			status;				// coordinate whole program to start or to end 2 - someone died, 1 - wait, 0 - run, -1 - error
 	t_mtx			lock;				// protect internals of t_ctx
-	int32_t			nbr_philos;			// number of philos
+	int64_t			nbr_philos;			// number of philos
 	t_time			time_to_die;		// in milliseconds
 	t_time			time_to_eat;		// in milliseconds
 	t_time			time_to_sleep;		// in milliseconds
-	int32_t			philos_full;		// -1 if meals not provided, temporary hold meals_to_eat before t_philo initialized
+	int64_t			philos_full;		// -1 if meals not provided, temporary hold meals_to_eat before t_philo initialized
 	t_time			start_time;			// in milliseconds
 	t_philo			*philos; 			// array of philos
 	t_fork			*forks; 			// array of forks
@@ -84,8 +84,8 @@ typedef struct s_ctx
  * UTILS
 */
 size_t	ft_strlen(const char *str);
-int		ft_atoi(int32_t *nbr, char *str);
-char	*ft_itoa(int32_t n);
+int		ft_atoi(int64_t *nbr, char *str);
+char	*ft_itoa(int64_t n);
 void	*ft_calloc(size_t num, size_t size);
 char	*ft_strjoin(char const *s1, char const *s2);
 void	*ft_memcpy(void *dest, const void *src, size_t n);

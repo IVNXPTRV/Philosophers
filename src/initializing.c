@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:21:35 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 12:58:27 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 02:23:04 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
  */
 int	allocate_philos(t_ctx *ctx)
 {
-	int32_t	i;
+	int64_t	i;
 
 	ctx->philos = ft_calloc(ctx->nbr_philos + 1, sizeof(t_philo));
 	if (!ctx->philos)
@@ -51,7 +51,7 @@ int	allocate_philos(t_ctx *ctx)
 
 int	allocate_forks(t_ctx *ctx)
 {
-	int32_t	i;
+	int64_t	i;
 
 	ctx->forks = ft_calloc(ctx->nbr_philos + 1, sizeof(t_fork));
 	if (!ctx->forks)
@@ -79,7 +79,7 @@ int	allocate_forks(t_ctx *ctx)
  */
 int	attach_philos(t_ctx *ctx)
 {
-	int32_t	i;
+	int64_t	i;
 
 	i = 0;
 	while (i < ctx->nbr_philos)

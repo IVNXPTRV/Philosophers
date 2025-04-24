@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:23:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 13:05:59 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 02:23:04 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static int get_first_msg_part(t_philo *philo, t_time time, char **result)
 int	put_philo_msg(t_philo *philo, t_time time, char *msg)
 {
 	char	*result;
-	int32_t	status;
+	int64_t	status;
 
 	if (get_first_msg_part(philo, time, &result) != SUCCESS)
 		return (ERROR);
@@ -96,7 +96,7 @@ int	put_philo_msg(t_philo *philo, t_time time, char *msg)
 	result = NULL;
 	if (!msg)
 		return (ERROR);
-	if (get_val(&philo->ctx->lock, &philo->ctx->status, &status, sizeof(int32_t)) != SUCCESS)
+	if (get_val(&philo->ctx->lock, &philo->ctx->status, &status, sizeof(int64_t)) != SUCCESS)
 	{
 		free(msg);
 		msg = NULL;

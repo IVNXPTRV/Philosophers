@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 05:59:20 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/16 12:07:44 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/24 02:23:04 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	clean_ctx(t_ctx **ctx)
 
 int clean_forks(t_fork **forks)
 {
-	int32_t	i;
+	int64_t	i;
 
 	i = 0;
 	while ((*forks)[i].id)
@@ -37,7 +37,7 @@ int clean_forks(t_fork **forks)
 // add mtx destroy
 int clean_philos(t_philo **philos)
 {
-	// int32_t	i;
+	// int64_t	i;
 
 	// i = 0;
 	// while (*philos + i)

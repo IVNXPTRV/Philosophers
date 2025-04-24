@@ -22,7 +22,7 @@ inline  static	bool is_numeric(char c)
 	return (c >= '0' && c <= '9');
 }
 
-int	ft_atoi(int32_t *nbr, char *str)
+int	ft_atoi(int64_t *nbr, char *str)
 {
 	char	digit;
 
@@ -46,9 +46,9 @@ int	ft_atoi(int32_t *nbr, char *str)
 	return (SUCCESS);
 }
 
-static int	get_num_length(int32_t n)
+static int	get_num_length(int64_t n)
 {
-	int32_t	len;
+	int64_t	len;
 
 	len = 0;
 	if (n <= 0)
@@ -62,10 +62,10 @@ static int	get_num_length(int32_t n)
 }
 
 //modified version adds space at the end
-char	*ft_itoa(int32_t n)
+char	*ft_itoa(int64_t n)
 {
 	char		*str;
-	int32_t		len;
+	int64_t		len;
 
 	len = get_num_length(n);
 	str = (char *)ft_calloc(len + 2, sizeof(char));
