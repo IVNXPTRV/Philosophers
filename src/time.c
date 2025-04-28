@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:44:38 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 10:18:29 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 11:33:32 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,18 +70,15 @@ t_sts	smart_sleep(t_time waittime, t_ctx *ctx)
 	waittime *= 1e3;
 	rem = waittime;
 	timeout = TIMEOUT * 1e3;
-	// printf("timeout"RED"%ld"RESET"\n", timeout);
-	// printf("waittime"RED"%ld"RESET"\n", waittime);
 	while (rem > 1e3)
 	{
+		// printf("rem to sleep: %ld\n", rem);
 		if (rem > timeout) // 100 000 timeout to check if simulation ended
 		{
-			if (usleep(timeout - 5e3) == ER)
+			if (usleep(timeout - 2e3) == ER)
 				return (puterr("usleep: Error: Interrupted system call\n"));
 			if (mtx_lock(&ctx->lock) != OK)
 				return (FAIL);
-			if (get_time(MS, &now, ctx->start_time) != OK)
-				return (ER);
 			if (is_end(ctx)) //
 				return (FAIL); // unlock mtx here
 			if (mtx_unlock(&ctx->lock) != OK)
@@ -94,7 +91,7 @@ t_sts	smart_sleep(t_time waittime, t_ctx *ctx)
 		}
 		if (get_time(US, &now, EPOCH) != OK)
 			return (ER);
-		rem = waittime - now - start;
+		rem = waittime - (now - start);
 	}
 	while (now - start < waittime)
 	{

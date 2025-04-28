@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:23:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 09:37:47 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 10:42:41 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static char *get_msg(t_msg msg)
 	if (msg == THINK)
 		return ("is thinking");
 	if (msg == DIED)
-		return ("is died");
+		return ("died");
 	return (NULL);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 05:59:20 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 10:25:46 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 10:53:56 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ t_sts join_threads(t_ctx *ctx)
 t_sts clean(t_ctx *ctx)
 {
 	join_threads(ctx);
+	// printf("pass join..\n");
 	clean_philos(&ctx->philos);
 	clean_forks(ctx);
 	clean_ctx(&ctx);

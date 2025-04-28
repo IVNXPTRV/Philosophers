@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 10:19:06 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 11:33:53 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ t_sts is_dead(t_philo *philo, t_time now)
 	{
 		philo->ctx->end = TRUE;
 		putmsg(philo, now, DIED); // dont need to check for error we almost exited
-		printf("\nOne philo is dead, sumulation stopped.\n");
+		printf("\nOne philo is dead. Simulation is stopped.\n");
 		mtx_unlock(&philo->ctx->lock);
 		return (TRUE);
 	}
@@ -129,7 +129,7 @@ inline t_sts is_all_full(t_philo *philo)
 		{
 			if (mtx_unlock(&philo->ctx->lock) != OK)
 				return (FAIL);
-			printf("\nAll philos are full, sumulation stopped.\n");
+			printf("\nAll philos are full. Simulation is stopped.\n");
 			return (TRUE);
 		}
 	}
@@ -143,7 +143,7 @@ t_sts	philo_delay(t_philo *philo)
 	if (philo->id == philo->ctx->num_philos && philo->ctx->num_philos % 2)
 	{
 		if (smart_sleep(2 * philo->ctx->time_to_eat, philo->ctx) != OK)
-			return (ER);
+			return (FAIL);
 	}
 	else
 	{
@@ -151,7 +151,7 @@ t_sts	philo_delay(t_philo *philo)
 		if (philo->id % 2)
 		{
 			if (smart_sleep(philo->ctx->time_to_eat, philo->ctx) != OK)
-				return (ER);
+				return (FAIL);
 		}
 		// each even philo will not wait
 	}

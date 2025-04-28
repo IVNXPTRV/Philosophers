@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 10:24:24 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 10:31:39 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 #define ERPTR "\xFF"
 #define OKPTR "\x01"
 #define MSG "%12ld %3ld %s"
-#define TIMEOUT 100 // 100ms timeout for sleeping or eating to check if simulation should be ended
+#define TIMEOUT 200 // 100ms timeout for sleeping or eating to check if simulation should be ended
 #define RED     "\033[31m"
 #define RESET   "\033[0m\n"
 #define DBGMSG RED"here"RESET
