@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:23:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 09:16:20 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 09:37:47 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ static t_sts put_debug_msg(t_time now, t_philo *philo, t_msg msg)
 		return (printf(MSG" [%ld]\n", now, philo->id, get_msg(msg), philo->fork_two->id));
 	if (msg == EAT)
 		return (printf(MSG" [%ld]\n", now, philo->id, get_msg(msg), philo->meals_eaten));
+	if (msg == SLEEP || msg == THINK || msg == DIED)
+		return (printf(MSG"\n", now, philo->id, get_msg(msg)));
 	return (OK);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 05:59:20 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 09:14:37 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 10:25:46 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,18 @@ t_int	clean_ctx(t_ctx **ctx)
 	return (OK);
 }
 
-t_int clean_forks(t_fork **forks)
+t_int clean_forks(t_ctx *ctx)
 {
 	t_int	i;
 
 	i = 0;
-	while ((*forks)[i].id)
+	while (ctx->forks[i].id < ctx->num_philos)
 	{
-		mtx_destroy(&(forks[i])->lock);
+		mtx_destroy(&ctx->forks[i].lock);
 		i++;
 	}
-	free(*forks);
-	*forks = NULL;
+	free(ctx->forks);
+	ctx->forks = NULL;
 	return (OK);
 }
 
@@ -69,7 +69,7 @@ t_sts clean(t_ctx *ctx)
 {
 	join_threads(ctx);
 	clean_philos(&ctx->philos);
-	clean_forks(&ctx->forks);
+	clean_forks(ctx);
 	clean_ctx(&ctx);
 	return (OK);
 }

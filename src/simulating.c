@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 09:29:16 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 10:19:06 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,12 @@ static t_sts release_forks(t_philo *philo)
 // pass here ctx->lock and automatically unlock before return
 inline t_sts is_end(t_ctx *ctx)
 {
-	return (ctx->end);
+	if (ctx->end)
+	{
+		mtx_unlock(&ctx->lock);
+		return (TRUE);
+	}
+	return (FALSE);
 }
 
 // sets ctx->end if died
@@ -96,6 +101,7 @@ t_sts is_dead(t_philo *philo, t_time now)
 		philo->ctx->end = TRUE;
 		putmsg(philo, now, DIED); // dont need to check for error we almost exited
 		printf("\nOne philo is dead, sumulation stopped.\n");
+		mtx_unlock(&philo->ctx->lock);
 		return (TRUE);
 	}
 	else
@@ -121,6 +127,8 @@ inline t_sts is_all_full(t_philo *philo)
 		philo->ctx->num_full_philos += 1;
 		if (philo->ctx->num_full_philos == philo->ctx->num_philos)
 		{
+			if (mtx_unlock(&philo->ctx->lock) != OK)
+				return (FAIL);
 			printf("\nAll philos are full, sumulation stopped.\n");
 			return (TRUE);
 		}
@@ -164,9 +172,9 @@ t_sts	philo_eat(t_philo *philo)
 		return (FAIL); // unlock mtx here
 	if (take_forks(philo, now) != OK)
 		return (FAIL); // unlock mtx here
+	check_in_meal(philo, now); // put last meal time using now and increment meals eaten
 	if (putmsg(philo, now, EAT) != OK)
 		return (FAIL); // unlock mtx here
-	check_in_meal(philo, now); // put last meal time using now and increment meals eaten
 	if (is_all_full(philo)) // check if full and if full increement global full philos and compare to total number and set end of sim if true
 		return (FAIL);
 	if (mtx_unlock(&philo->ctx->lock) != OK)
@@ -210,7 +218,7 @@ t_sts	philo_think(t_philo *philo)
 	if (get_time(MS, &now, philo->ctx->start_time) != OK)
 		return (FAIL); // unlock mtx here
 	if (is_end(philo->ctx)) //
-		return (FAIL); // unlock mtx here
+		return (FAIL);
 	if (is_dead(philo, now)) // set global sim end
 		return (FAIL); // unlock mtx here
 	if (putmsg(philo, now, THINK) != OK)

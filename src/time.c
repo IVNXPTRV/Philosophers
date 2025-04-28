@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:44:38 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 09:26:26 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 10:18:29 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,13 @@ t_sts	smart_sleep(t_time waittime, t_ctx *ctx)
 	waittime *= 1e3;
 	rem = waittime;
 	timeout = TIMEOUT * 1e3;
+	// printf("timeout"RED"%ld"RESET"\n", timeout);
+	// printf("waittime"RED"%ld"RESET"\n", waittime);
 	while (rem > 1e3)
 	{
 		if (rem > timeout) // 100 000 timeout to check if simulation ended
 		{
-			if (usleep(timeout - 1e3) == ER)
+			if (usleep(timeout - 5e3) == ER)
 				return (puterr("usleep: Error: Interrupted system call\n"));
 			if (mtx_lock(&ctx->lock) != OK)
 				return (FAIL);

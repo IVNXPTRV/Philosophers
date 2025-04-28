@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:21:35 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 09:25:20 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 10:25:08 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ t_sts	allocate_philos(t_ctx *ctx)
 	{
 		ctx->philos[i].id = i + 1;
 		ctx->philos[i].ctx = ctx;
-		if (ctx->meals_to_eat == UNDEFINED) // dont even need? we check ctx->meals_to_eat instead?
-			ctx->philos[i].meals_eaten = UNDEFINED;
 		if (ctx->philos[i].id < ctx->num_philos)
 		{
 			ctx->philos[i].fork_one = &ctx->forks[i];
@@ -64,7 +62,7 @@ t_sts	allocate_forks(t_ctx *ctx)
 		ctx->forks[i].state = false;
 		if (mtx_init(&ctx->forks[i].lock) != OK)
 		{
-			clean_forks(&ctx->forks);
+			clean_forks(ctx);
 			return (ER);
 		}
 		i++;
@@ -129,7 +127,7 @@ t_sts	init_data(t_ctx *ctx)
 	if (allocate_philos(ctx) != OK)
 	{
 		mtx_unlock(&ctx->lock);
-		clean_forks(&ctx->forks);
+		clean_forks(ctx);
 		clean_ctx(&ctx);
 		return (ER);
 	}
@@ -137,7 +135,7 @@ t_sts	init_data(t_ctx *ctx)
 	{
 		mtx_unlock(&ctx->lock);
 		clean_philos(&ctx->philos);
-		clean_forks(&ctx->forks);
+		clean_forks(ctx);
 		clean_ctx(&ctx);
 		return (ER);
 	}
