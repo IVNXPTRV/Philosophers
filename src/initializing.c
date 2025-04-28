@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:21:35 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 13:05:21 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/25 04:26:11 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * @param ctx
  * @return int
  */
-int	allocate_philos(t_ctx *ctx)
+t_sts	allocate_philos(t_ctx *ctx)
 {
 	t_int	i;
 
@@ -33,21 +33,20 @@ int	allocate_philos(t_ctx *ctx)
 		ctx->philos[i].ctx = ctx;
 		if (ctx->philos[i].id < ctx->num_philos)
 		{
-			ctx->philos[i].first_fork = &ctx->forks[i];
-			ctx->philos[i].second_fork = &ctx->forks[i + 1];
+			ctx->philos[i].fork_one = &ctx->forks[i];
+			ctx->philos[i].fork_two = &ctx->forks[i + 1];
 		}
 		else
 		{
-			ctx->philos[i].first_fork = &ctx->forks[0];
-			ctx->philos[i].second_fork = &ctx->forks[i];
+			ctx->philos[i].fork_one = &ctx->forks[0];
+			ctx->philos[i].fork_two = &ctx->forks[i];
 		}
-		ctx->philos[i].meals_to_eat = ctx->philos_full;
 		i++;
 	}
 	return (OK);
 }
 
-int	allocate_forks(t_ctx *ctx)
+t_sts	allocate_forks(t_ctx *ctx)
 {
 	t_int	i;
 
@@ -75,7 +74,7 @@ int	allocate_forks(t_ctx *ctx)
  * @param ctx
  * @return int
  */
-int	attach_philos(t_ctx *ctx)
+t_sts	attach_philos(t_ctx *ctx)
 {
 	t_int	i;
 
@@ -94,11 +93,12 @@ int	attach_philos(t_ctx *ctx)
  *
  * @return int
  */
-int	init_ctx(t_ctx *ctx)
+t_sts	init_ctx(t_ctx *ctx)
 {
 	if (mtx_init(&ctx->lock) != OK)
 		return (ER);
-	ctx->status = WAIT;
+	if (mtx_lock(&ctx->lock) != OK) // lock murex here to be able later to run all philo at once
+		return (ER);
 	return (OK);
 }
 
@@ -106,7 +106,7 @@ int	init_ctx(t_ctx *ctx)
  * Initializing main structures
  *
 */
-int	init_data(t_ctx *ctx)
+t_sts	init_data(t_ctx *ctx)
 {
 	if (init_ctx(ctx) != OK)
 		return (ER);
@@ -128,7 +128,5 @@ int	init_data(t_ctx *ctx)
 		clean_ctx(&ctx);
 		return (ER);
 	}
-	if (ctx->philos_full != -1)
-		ctx->philos_full = 0;
 	return (OK);
 }

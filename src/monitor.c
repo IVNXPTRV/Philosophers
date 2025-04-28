@@ -1,0 +1,39 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   monitor.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/28 06:24:14 by ipetrov           #+#    #+#             */
+/*   Updated: 2025/04/28 06:33:24 by ipetrov          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "header.h"
+
+t_sts	death_monitor(t_ctx *ctx)
+{
+	t_int	i;
+	t_time	now;
+
+	while (true)
+	{
+		if (mtx_lock(&ctx->lock) != OK)
+			return (FAIL);
+		if (is_end(ctx)) //
+			return (FAIL); // unlock mtx here
+		if (get_time(&now, ctx->start_time) != OK)
+			return (FAIL); // unlock mtx here
+		i = 0;
+		while (i < ctx->num_philos)
+		{
+			if (is_dead(&ctx->philos[i], now))
+				return (FAIL); // unlock mtx here
+			i++;
+		}
+		if (mtx_unlock(&ctx->lock) != OK)
+			return (FAIL);
+		psleep(ctx->time_to_die);
+	}
+}

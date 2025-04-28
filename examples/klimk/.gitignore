@@ -1,0 +1,22 @@
+# IDE
+.vscode
+.idea
+*.dSYM
+
+# program
+a.out
+philo
+
+#objects
+obj
+
+#tests
+tests
+
+#scripts
+*.sh
+
+# rest
+.DS_store
+*.txt
+logs

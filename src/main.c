@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 06:39:58 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 12:56:14 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/25 03:53:38 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  * ./philo    5    800  200   200     7
  * 		   philos  die  eat  sleep  meals
 */
-int	main(int ac, char **av)
+t_sts	main(t_int ac, char **av)
 {
 	t_ctx	ctx;
 

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:23:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 13:05:21 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/27 08:16:56 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
  * @param msg The ER message to print.
  * @return Always returns ER.
  */
-int	puterr(char *msg)
+t_sts	puterr(char *msg)
 {
 	static t_mtx	lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -46,12 +46,12 @@ static char *get_msg(t_msg msg)
 	return (NULL);
 }
 
-static int put_debug_msg(t_time now, t_philo *philo, t_msg msg)
+static t_sts put_debug_msg(t_time now, t_philo *philo, t_msg msg)
 {
 	if (msg == FORK_1)
-		return (printf(MSG" [%ld]\n", now, philo->id, get_msg(msg), philo->first_fork->id));
+		return (printf(MSG" [%ld]\n", now, philo->id, get_msg(msg), philo->fork_one->id));
 	if (msg == FORK_2)
-		return (printf(MSG" [%ld]\n", now, philo->id, get_msg(msg), philo->second_fork->id));
+		return (printf(MSG" [%ld]\n", now, philo->id, get_msg(msg), philo->fork_two->id));
 	if (msg == EAT)
 		return (printf(MSG" [%ld]\n", now, philo->id, get_msg(msg), philo->meals_eaten));
 	return (OK);
@@ -67,24 +67,26 @@ static int put_debug_msg(t_time now, t_philo *philo, t_msg msg)
  * timestamp_in_ms X died
  * @param msg has to be with '/n' at the end
  */
-int	put_msg(t_philo *philo, t_msg msg)
+t_sts	putmsg(t_philo *philo, t_msg msg)
 {
-	t_time			now;
 	t_int			fork_num;
-	static t_mtx	lock = PTHREAD_MUTEX_INITIALIZER;
 
-	if (mtx_lock(&lock) != OK)
+	// lock mtx
+	// get time
+	// eval_sts
+	//	unlock if return
+	// print msg if need
+	// unlock
+	if (mtx_lock(&philo->ctx->lock) != OK)
 		return (ER);
-	if (get_time(&now, philo->ctx->start_time) != OK)
-		return (ER);
-	now /= 1e3;
-	if (now - philo->last_meal_time / 1e3 > philo->ctx->time_to_die / 1e3) // before print check if died
-		return (OK);
 	if (DEBUG)
 		put_debug_msg(now, philo, msg);
 	else if (printf(MSG"\n", now, philo->id, get_msg(msg)) < 0)
+	{
+		mtx_unlock(&philo->ctx->lock);
 		return (puterr("printf: failed\n"));
-	if (mtx_unlock(&lock) != OK)
+	}
+	if (mtx_unlock(&philo->ctx->lock) != OK)
 		return (ER);
 }
 

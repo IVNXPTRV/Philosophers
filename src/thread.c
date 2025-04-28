@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 09:25:24 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 11:22:19 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/25 03:57:33 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@
  *		[EPERM]            The caller does not have appropriate permission to set the required scheduling parameters or scheduling policy.
  *		[EINVAL]           The value specified by attr is invalid.
  */
-int th_create(pthread_t *tid, void *func(void *), void *arg)
+t_sts th_create(pthread_t *tid, void *func(void *), void *arg)
 {
-	int	code;
+	t_int	code;
 
 	code = pthread_create(tid, NULL, func, arg);
 	if (code == 0)
@@ -48,9 +48,9 @@ int th_create(pthread_t *tid, void *func(void *), void *arg)
  *		[ESRCH]            No thread could be found corresponding to that specified by the given thread ID, thread. / Error: No such process
  *		[EDEADLK]          A deadlock was detected or the value of thread specifies the calling thread. / Error: Resource deadlock avoided
  */
-int th_join(pthread_t *tid)
+t_sts th_join(pthread_t *tid)
 {
-	int	code;
+	t_int	code;
 
 	code = pthread_join(*tid, NULL);
 	if (code == 0)

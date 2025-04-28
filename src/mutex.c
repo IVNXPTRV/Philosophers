@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 08:09:48 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 13:05:21 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/27 07:58:42 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,11 +111,11 @@ int	mtx_unlock(t_mtx *lock)
  * @param val - value to be written to var
  * @return int
  */
-int	set_val(t_mtx *lock, void *var, void *src)
+t_sts	set_val(t_mtx *lock, void *dst, void *src)
 {
 	if (mtx_lock(lock) != OK)
 		return (ER);
-	ft_memcpy(var, src, sizeof(t_int));
+	ft_memcpy(dst, src, sizeof(t_int));
 	if (mtx_unlock(lock) != OK)
 		return (ER);
 	return (OK);
@@ -129,9 +129,9 @@ int	set_val(t_mtx *lock, void *var, void *src)
  * @param val - palce to put read content
  * @return int
  */
-int	get_val(t_mtx *lock, void *var, void *dst)
+t_sts	get_val(t_mtx *lock, void *src, void *dst)
 {
-	if (set_val(lock, dst, var) != OK)
+	if (set_val(lock, dst, src) != OK)
 		return (ER);
 	return (OK);
 }

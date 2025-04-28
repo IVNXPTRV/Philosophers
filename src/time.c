@@ -6,12 +6,13 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:44:38 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 13:09:40 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 06:19:19 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
+// start_time -- time elapsed from start time, 0 if full epoch
 /**
  * @brief Retrieves the time elapsed in microseconds since the starting point
  *
@@ -21,11 +22,11 @@
  *		The following ER codes may be set in errno:
  *		[EFAULT]  An argument address referenced invalid memory. / Error: Bad address
  *		[EPERM]   A user other than the super-user attempted to set the time / Error: Operation not permitted
- * @param[out] timestamp The current timestamp in microseconds since the simulation began.
+ * @param[out] dst The current timestamp in microseconds since the simulation began.
  * @param start_time The timestamp in microseconds marking the start of the simulation.
  * @return Status code.
  */
-int	get_time(t_time *timestamp, t_time start_time)
+t_sts	get_time(t_time_type type, t_time *dst, t_time start_time)
 {
 	struct timeval tv;
 
@@ -36,7 +37,14 @@ int	get_time(t_time *timestamp, t_time start_time)
 		else if (errno == EPERM)
 			return (puterr(PRNME"gettimeofday: Error: Operation not permitted\n"));
 	}
-	*timestamp = (tv.tv_sec * 1e6) + tv.tv_usec - start_time;
+	if (type == MS)
+	{
+		*dst = (tv.tv_sec * 1e3) + (tv.tv_usec / 1e3) - start_time;
+	}
+	else // US
+	{
+		*dst = (tv.tv_sec * 1e6) + tv.tv_usec - start_time;
+	}
 	return (OK);
 }
 
@@ -47,29 +55,48 @@ int	get_time(t_time *timestamp, t_time start_time)
  * ERS
  *  The usleep() function will fail if:
  *  [EINTR]            A signal was delivered to the process and its action was to invoke a signal-catching function. / Error: Interrupted system call
- * @param time
+ * @param waittime // in ms
  * @return int
  */
-int	psleep(t_time waittime)
+t_sts	psleep(t_time waittime, t_philo *philo)
 {
 	t_time	start;
+	t_time	timeout;
 	t_time	now;
 	t_time	rem;
 
-	if (get_time(&start, 0) != OK)
+	if (get_time(US, &start, EPOCH) != OK)
 		return (ER);
+	waittime *= 1e3;
 	rem = waittime;
+	timeout = TIMEOUT * 1e3;
 	while (rem > 1e3)
 	{
-		if (usleep(rem / 2) == ER)
-			return (puterr("usleep: Error: Interrupted system call\n"));
-		if (get_time(&now, 0) != OK)
+		if (rem > timeout) // 100 000 timeout to check if simulation ended
+		{
+			if (usleep(timeout - 1e3) == ER)
+				return (puterr("usleep: Error: Interrupted system call\n"));
+			if (mtx_lock(&philo->ctx->lock) != OK)
+				return (FAIL);
+			if (get_time(MS, &now, &philo->ctx->start_time) != OK)
+				return (ER);
+			if (is_end(philo->ctx)) //
+				return (FAIL); // unlock mtx here
+			if (mtx_unlock(&philo->ctx->lock) != OK)
+				return (FAIL);
+		}
+		else
+		{
+			if (usleep(rem / 2) == ER)
+				return (puterr("usleep: Error: Interrupted system call\n"));
+		}
+		if (get_time(US, &now, EPOCH) != OK)
 			return (ER);
 		rem = waittime - now - start;
 	}
 	while (now - start < waittime)
 	{
-		if (get_time(&now, 0) != OK)
+		if (get_time(US, &now, EPOCH) != OK)
 			return (ER);
 	}
 	return (OK);

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 12:31:50 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/24 13:03:12 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/25 04:26:24 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
  * ./philo    5    800  200   200     7
  * 		   philos  die  eat  sleep  meals
 */
-int	parse_input(t_ctx *ctx, int ac, char **av)
+t_sts	parse_input(t_ctx *ctx, t_int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
 		return (puterr(PRNME"wrong number of arguments\n"));
@@ -47,13 +47,10 @@ int	parse_input(t_ctx *ctx, int ac, char **av)
 		return (ER);
 	if (ctx->time_to_die == 0 || ctx->time_to_eat == 0 || ctx->time_to_sleep == 0)
 		return (puterr(PRNME"time has to be greater then 0\n"));
-	ctx->philos_full = -1;
-	if (av[5] && ft_atoi(&ctx->philos_full, av[5]) != OK)
+	ctx->meals_to_eat = -1;
+	if (av[5] && ft_atoi(&ctx->meals_to_eat, av[5]) != OK)
 		return (ER);
-	if (ctx->philos_full == 0)
+	if (ctx->meals_to_eat == 0)
 		return (puterr(PRNME"number of meals can't be 0\n"));
-	ctx->time_to_die *= 1e3; // convert input to microseconds
-	ctx->time_to_eat *= 1e3; // convert input to microseconds
-	ctx->time_to_sleep *= 1e3; // convert input to microseconds
 	return (OK);
 }

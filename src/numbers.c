@@ -22,7 +22,7 @@ inline  static	bool is_numeric(char c)
 	return (c >= '0' && c <= '9');
 }
 
-int	ft_atoi(t_int *num, char *str)
+t_sts	ft_atoi(t_int *num, char *str)
 {
 	char	digit;
 
