@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 11:33:53 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 11:44:27 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,11 +167,11 @@ t_sts	philo_eat(t_philo *philo)
 	if (get_time(MS, &now, philo->ctx->start_time) != OK)
 		return (FAIL); // unlock mtx here
 	if (is_end(philo->ctx)) //
-		return (FAIL); // unlock mtx here
-	if (is_dead(philo, now)) // set global sim end
-		return (FAIL); // unlock mtx here
+		return (FAIL);
+	if (is_dead(philo, now))
+		return (FAIL);
 	if (take_forks(philo, now) != OK)
-		return (FAIL); // unlock mtx here
+		return (FAIL); // unlock mtx here if failed
 	check_in_meal(philo, now); // put last meal time using now and increment meals eaten
 	if (putmsg(philo, now, EAT) != OK)
 		return (FAIL); // unlock mtx here

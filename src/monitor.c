@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 06:24:14 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 11:34:08 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 11:45:25 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_sts	death_monitor(t_ctx *ctx)
 		}
 		if (mtx_unlock(&ctx->lock) != OK)
 			return (FAIL);
-		if (smart_sleep(ctx->time_to_die, ctx) != OK)
-			return (FAIL);
+		if (usleep(7000) == ER)
+			return (puterr("usleep: Error: Interrupted system call\n"));
 	}
 }
