@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:23:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/27 08:16:56 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 09:16:20 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,27 +67,13 @@ static t_sts put_debug_msg(t_time now, t_philo *philo, t_msg msg)
  * timestamp_in_ms X died
  * @param msg has to be with '/n' at the end
  */
-t_sts	putmsg(t_philo *philo, t_msg msg)
+t_sts	putmsg(t_philo *philo, t_time now, t_msg msg)
 {
-	t_int			fork_num;
-
-	// lock mtx
-	// get time
-	// eval_sts
-	//	unlock if return
-	// print msg if need
-	// unlock
-	if (mtx_lock(&philo->ctx->lock) != OK)
-		return (ER);
 	if (DEBUG)
 		put_debug_msg(now, philo, msg);
 	else if (printf(MSG"\n", now, philo->id, get_msg(msg)) < 0)
-	{
-		mtx_unlock(&philo->ctx->lock);
 		return (puterr("printf: failed\n"));
-	}
-	if (mtx_unlock(&philo->ctx->lock) != OK)
-		return (ER);
+	return (OK);
 }
 
 // //put_msg tester

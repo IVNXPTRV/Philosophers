@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:21:35 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/25 04:26:11 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 09:25:20 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_sts	allocate_philos(t_ctx *ctx)
 {
 	t_int	i;
 
-	ctx->philos = ft_calloc(ctx->num_philos + 1, sizeof(t_philo));
+	ctx->philos = ft_calloc(ctx->num_philos, sizeof(t_philo));
 	if (!ctx->philos)
 		return (ER);
 	i = 0;
@@ -31,6 +31,8 @@ t_sts	allocate_philos(t_ctx *ctx)
 	{
 		ctx->philos[i].id = i + 1;
 		ctx->philos[i].ctx = ctx;
+		if (ctx->meals_to_eat == UNDEFINED) // dont even need? we check ctx->meals_to_eat instead?
+			ctx->philos[i].meals_eaten = UNDEFINED;
 		if (ctx->philos[i].id < ctx->num_philos)
 		{
 			ctx->philos[i].fork_one = &ctx->forks[i];
@@ -46,17 +48,20 @@ t_sts	allocate_philos(t_ctx *ctx)
 	return (OK);
 }
 
+// set state of fork false
+// set id of fork starting from 1
 t_sts	allocate_forks(t_ctx *ctx)
 {
 	t_int	i;
 
-	ctx->forks = ft_calloc(ctx->num_philos + 1, sizeof(t_fork));
+	ctx->forks = ft_calloc(ctx->num_philos, sizeof(t_fork));
 	if (!ctx->forks)
 		return (ER);
 	i = 0;
 	while (i < ctx->num_philos)
 	{
 		ctx->forks[i].id = i + 1;
+		ctx->forks[i].state = false;
 		if (mtx_init(&ctx->forks[i].lock) != OK)
 		{
 			clean_forks(&ctx->forks);
@@ -90,15 +95,20 @@ t_sts	attach_philos(t_ctx *ctx)
 
 /**
  * @brief
- *
- * @return int
+ * calculates time_to_think
  */
 t_sts	init_ctx(t_ctx *ctx)
 {
 	if (mtx_init(&ctx->lock) != OK)
 		return (ER);
-	if (mtx_lock(&ctx->lock) != OK) // lock murex here to be able later to run all philo at once
+	if (mtx_lock(&ctx->lock) != OK) // lock mutex here to be able later to run all philo at once
 		return (ER);
+	if (ctx->num_philos % 2)
+		ctx->time_to_think = 2 * ctx->time_to_eat - ctx->time_to_sleep;
+	else
+		ctx->time_to_think = ctx->time_to_eat - ctx->time_to_sleep;
+	if (ctx->time_to_think < 0)
+		ctx->time_to_think = 0;
 	return (OK);
 }
 
@@ -112,17 +122,20 @@ t_sts	init_data(t_ctx *ctx)
 		return (ER);
 	if (allocate_forks(ctx) != OK)
 	{
+		mtx_unlock(&ctx->lock);
 		clean_ctx(&ctx);
 		return (ER);
 	}
 	if (allocate_philos(ctx) != OK)
 	{
+		mtx_unlock(&ctx->lock);
 		clean_forks(&ctx->forks);
 		clean_ctx(&ctx);
 		return (ER);
 	}
 	if (attach_philos(ctx) != OK)
 	{
+		mtx_unlock(&ctx->lock);
 		clean_philos(&ctx->philos);
 		clean_forks(&ctx->forks);
 		clean_ctx(&ctx);

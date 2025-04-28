@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 07:14:48 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 09:29:16 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static inline t_sts stop_before_herd_gate(t_ctx *ctx)
 		return (FAIL);
 	return (OK);
 }
+
 static t_sts take_fork(t_fork *fork)
 {
 	while (true)
@@ -39,15 +40,15 @@ static t_sts take_fork(t_fork *fork)
 	}
 }
 
-static t_sts take_forks(t_philo *philo)
+static t_sts take_forks(t_philo *philo, t_time now)
 {
-	if (take_fork(&philo->fork_one) != OK)
+	if (take_fork(philo->fork_one) != OK)
 		return (FAIL);
-	if (putmsg(philo, FORK_1) != OK)
+	if (putmsg(philo, now, FORK_1) != OK)
 		return (FAIL);
-	if (take_fork(&philo->fork_two) != OK)
+	if (take_fork(philo->fork_two) != OK)
 		return (FAIL);
-	if (putmsg(philo, FORK_2) != OK)
+	if (putmsg(philo, now, FORK_2) != OK)
 		return (FAIL);
 	return (OK);
 }
@@ -73,9 +74,9 @@ static t_sts release_fork(t_fork *fork)
 
 static t_sts release_forks(t_philo *philo)
 {
-	if (release_fork(&philo->fork_one) != OK)
+	if (release_fork(philo->fork_one) != OK)
 		return (FAIL);
-	if (release_fork(&philo->fork_two) != OK)
+	if (release_fork(philo->fork_two) != OK)
 		return (FAIL);
 	return (OK);
 }
@@ -93,7 +94,8 @@ t_sts is_dead(t_philo *philo, t_time now)
 	if (now - philo->last_meal_time > philo->ctx->time_to_die)
 	{
 		philo->ctx->end = TRUE;
-		putmsg(philo, DIED); // dont need to check for error we almost exited
+		putmsg(philo, now, DIED); // dont need to check for error we almost exited
+		printf("\nOne philo is dead, sumulation stopped.\n");
 		return (TRUE);
 	}
 	else
@@ -118,10 +120,12 @@ inline t_sts is_all_full(t_philo *philo)
 	{
 		philo->ctx->num_full_philos += 1;
 		if (philo->ctx->num_full_philos == philo->ctx->num_philos)
+		{
+			printf("\nAll philos are full, sumulation stopped.\n");
 			return (TRUE);
+		}
 	}
-	else
-		return (FALSE);
+	return (FALSE);
 }
 
 // prevent deadlock and starvation
@@ -130,7 +134,7 @@ t_sts	philo_delay(t_philo *philo)
 	// last philo if total num is odd will wait 2 eat times
 	if (philo->id == philo->ctx->num_philos && philo->ctx->num_philos % 2)
 	{
-		if (psleep(2 * philo->ctx->time_to_eat) != OK)
+		if (smart_sleep(2 * philo->ctx->time_to_eat, philo->ctx) != OK)
 			return (ER);
 	}
 	else
@@ -138,7 +142,7 @@ t_sts	philo_delay(t_philo *philo)
 		// each odd philo will wait 1 eat time
 		if (philo->id % 2)
 		{
-			if (psleep(philo->ctx->time_to_eat) != OK)
+			if (smart_sleep(philo->ctx->time_to_eat, philo->ctx) != OK)
 				return (ER);
 		}
 		// each even philo will not wait
@@ -152,22 +156,22 @@ t_sts	philo_eat(t_philo *philo)
 
 	if (mtx_lock(&philo->ctx->lock) != OK)
 		return (FAIL);
-	if (get_time(&now, philo->ctx->start_time) != OK)
+	if (get_time(MS, &now, philo->ctx->start_time) != OK)
 		return (FAIL); // unlock mtx here
 	if (is_end(philo->ctx)) //
 		return (FAIL); // unlock mtx here
 	if (is_dead(philo, now)) // set global sim end
 		return (FAIL); // unlock mtx here
-	if (take_forks(philo) != OK)
+	if (take_forks(philo, now) != OK)
 		return (FAIL); // unlock mtx here
-	if (putmsg(philo, EAT) != OK)
+	if (putmsg(philo, now, EAT) != OK)
 		return (FAIL); // unlock mtx here
 	check_in_meal(philo, now); // put last meal time using now and increment meals eaten
 	if (is_all_full(philo)) // check if full and if full increement global full philos and compare to total number and set end of sim if true
 		return (FAIL);
 	if (mtx_unlock(&philo->ctx->lock) != OK)
 		return (FAIL);
-	if (psleep(&philo->ctx->time_to_eat) != OK)
+	if (smart_sleep(philo->ctx->time_to_eat, philo->ctx) != OK)
 		return (FAIL);
 	if (release_forks(philo) != OK)
 		return (FAIL);
@@ -179,38 +183,44 @@ t_sts	philo_sleep(t_philo *philo)
 	t_time	now;
 
 	if (mtx_lock(&philo->ctx->lock) != OK)
-		return (ER);
-	if (is_end())//??
-		return (ER); // unlock mtx here
-	if (get_time(&now, philo->ctx->start_time) != OK)
-		return (ER); // unlock mtx here
-	if (is_dead())//?? //set global sim end
-		return (ER); // unlock mtx here
-	if (putmsg(philo, SLEEP) != OK)
-		return (ER); // unlock mtx here
-	if (psleep(&philo->ctx->time_to_sleep) != OK)
-		return (ER);
+		return (FAIL);
+	if (get_time(MS, &now, philo->ctx->start_time) != OK)
+		return (FAIL); // unlock mtx here
+	if (is_end(philo->ctx)) //
+		return (FAIL); // unlock mtx here
+	if (is_dead(philo, now)) // set global sim end
+		return (FAIL); // unlock mtx here
+	if (putmsg(philo, now, SLEEP) != OK)
+		return (FAIL); // unlock mtx here
+	if (mtx_unlock(&philo->ctx->lock) != OK)
+		return (FAIL);
+	if (smart_sleep(philo->ctx->time_to_sleep, philo->ctx) != OK)
+		return (FAIL);
 	return (OK);
 }
 
+// maybe pass now time to eat fom here to think take forks and eat at same timestamp under one lock
+// if time_to_think == 0
 t_sts	philo_think(t_philo *philo)
 {
 	t_time	now;
 
 	if (mtx_lock(&philo->ctx->lock) != OK)
-		return (ER);
-	if (is_end())//??
-		return (ER); // unlock mtx here
-	if (get_time(&now, philo->ctx->start_time) != OK)
-		return (ER); // unlock mtx here
-	if (is_dead())//?? //set global sim end
-		return (ER); // unlock mtx here
-	if (putmsg(philo, THINK) != OK)
-		return (ER); // unlock mtx here
+		return (FAIL);
+	if (get_time(MS, &now, philo->ctx->start_time) != OK)
+		return (FAIL); // unlock mtx here
+	if (is_end(philo->ctx)) //
+		return (FAIL); // unlock mtx here
+	if (is_dead(philo, now)) // set global sim end
+		return (FAIL); // unlock mtx here
+	if (putmsg(philo, now, THINK) != OK)
+		return (FAIL); // unlock mtx here
+	if (mtx_unlock(&philo->ctx->lock) != OK)
+		return (FAIL);
 	if (philo->ctx->time_to_think)
 	{
-		if (psleep(&philo->ctx->time_to_think) != OK)
-			return (ER);
+		if (smart_sleep(philo->ctx->time_to_think, philo->ctx) != OK)
+			return (FAIL);
 	}
 	return (OK);
 }
@@ -218,15 +228,15 @@ t_sts	philo_think(t_philo *philo)
 void	*philo_routine(void *ptr)
 {
 	t_philo	*philo;
-	t_sts	status;
+	t_bool	end;
 
 	philo = (t_philo *)ptr;
-	status = RUNNING;
-	if (stop_before_herd_gate(philo) != OK)
-		status = END;
-	if (status != END && philo_delay(philo) != OK)
-		status = END;
-	while (status != END)
+	end = false;
+	if (stop_before_herd_gate(philo->ctx) != OK)
+		end = true;
+	if (!end && philo_delay(philo) != OK)
+		end = true;
+	while (!end)
 	{
 		if (philo_eat(philo) != OK)
 			break ;
@@ -235,7 +245,10 @@ void	*philo_routine(void *ptr)
 		if (philo_think(philo) != OK)
 			break ;
 	}
-	// set global simulation end status = END
+	// set global simulation end to true
+	mtx_lock(&philo->ctx->lock);
+	philo->ctx->end = TRUE;
+	mtx_unlock(&philo->ctx->lock);
 	return (NULL);
 }
 
@@ -249,7 +262,7 @@ t_sts open_herd_gate(t_ctx *ctx)
 
 t_sts init_start_time(t_ctx *ctx)
 {
-	if (get_time(US, &ctx->start_time, EPOCH) != OK)
+	if (get_time(MS, &ctx->start_time, EPOCH) != OK)
 		return (ER);
 	return (OK);
 }
@@ -264,38 +277,13 @@ t_sts init_start_time(t_ctx *ctx)
  */
 t_sts run_simulation(t_ctx *ctx)
 {
-	t_int	status;
-	t_int	i;
-
 	if (init_start_time(ctx) != OK)
-		return (ER);
+		return (FAIL);
 	if (open_herd_gate(ctx) != OK)
-		return (ER);
-	while (true)
-	{
-		i = -1;
-		while (++i < ctx->num_philos)
-		{
-			if (is_dead(ctx->philos[i] != OK))
-				return (ER);
-		}
-		if (is_end(ctx) != OK) //
-			return (ER);
-		//sleep less 20 ms
-		usleep(15000);
-	}
+		return (FAIL);
+	death_monitor(ctx);
+	mtx_lock(&ctx->lock);
+	ctx->end = TRUE;
+	mtx_unlock(&ctx->lock);
 	return (OK);
 }
-
-// if (get_val(&ctx->lock, &ctx->status, &status) != OK) // get status of simulation
-// return (ER);
-// if (status == DIED) // check if anyone died -- check status if 2, someone died
-// return (OK);
-// else if (status == ER) // check if any ER reported to finish execution
-// return (ER);
-// if (ctx->philos_full == -1) // check if we had number of meals in arguments
-// continue ;
-// if (get_val(&ctx->lock, &ctx->philos_full, &status) != OK) // get number of full philos
-// return (ER);
-// if (status == ctx->num_philos) // check if all full
-// return (OK);

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 07:07:46 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 09:31:02 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 #define PRNME "philo: "
 #define ERPTR "\xFF"
 #define OKPTR "\x01"
-#define MSG "%012ld %03ld %s"
+#define MSG "%12ld %3ld %s"
 #define TIMEOUT 100 // 100ms timeout for sleeping or eating to check if simulation should be ended
 
 
@@ -66,7 +66,7 @@ typedef enum e_msg
 	EAT,
 	SLEEP,
 	THINK,
-	DIED
+	DIED,
 } t_msg;
 
 typedef enum e_time_type
@@ -75,15 +75,6 @@ typedef enum e_time_type
 	MS  // milliseconds
 } t_time_type;
 
-typedef enum e_ctx_sts
-{
-	RUNNING,
-	PAUSE,
-	END
-	// DEAD,
-	// FULL,
-	// ERROR
-} t_ctx_sts;
 
 typedef struct s_fork
 {
@@ -97,7 +88,6 @@ typedef struct s_philo
 	t_mtx			lock;				// protect internals of t_philo specifically last_meal_time
 	t_int			id;					// number of philo starting from 1
 	t_tid			tid; 				// thread id internal for pthread
-	// t_sts			status;				// status of philo / ALIVE, DEAD, FULL, ERROR
 	t_int 			meals_eaten;		// -1 if not provided, otherwise number of meals eaten
 	t_time			last_meal_time;		// last meal start time in mlliseconds
 	t_fork			*fork_one;			// right fork
@@ -116,7 +106,7 @@ typedef struct s_ctx
 	t_int			num_full_philos;	// number of full philos
 	// ** CONST **
 	t_int			num_philos;			// number of philos
-	t_int			meals_to_eat;		// num of meals to eat
+	t_int			meals_to_eat;		// num of meals to eat -1 if UNDEFINED
 	t_time			time_to_die;		// in mlliseconds, read-only
 	t_time			time_to_eat;		// in mlliseconds, read-only
 	t_time			time_to_sleep;		// in mlliseconds, read-only
@@ -142,36 +132,44 @@ void	*ft_memcpy(void *dest, const void *src, size_t n);
  * PRINT
  */
 t_sts	puterr(char *msg);
-t_sts	putmsg(t_philo *philo, t_msg msg);
+t_sts	putmsg(t_philo *philo, t_time now, t_msg msg);
 
 /**
  * STATUS
  */
 t_sts is_dead(t_philo *philo, t_time now);
+t_sts is_end(t_ctx *ctx);
 
 /**
  * TIME
  */
-t_sts	get_time(t_time *dst, t_time start_time);
-t_sts	psleep(t_time waittime)
-
+t_sts	get_time(t_time_type type, t_time *dst, t_time start_time);
+t_sts	smart_sleep(t_time waittime, t_ctx *ctx);
 /**
  * PARSING
  */
-t_sts		parse_input(t_ctx *ctx, int ac, char **av);
+t_sts	parse_input(t_ctx *ctx, t_int ac, char **av);
 
 /**
  * SIMULATING
  *
  */
-t_sts		run_simulation(t_ctx *ctx);
+t_sts	run_simulation(t_ctx *ctx);
 void	*philo_routine(void *ptr);
+t_sts	check_in_meal(t_philo *philo, t_time now);
+t_sts is_all_full(t_philo *philo);
 
 /**
  * INITIALIZING
  *
  */
 t_sts	init_data(t_ctx *ctx);
+
+/**
+ * MONITOR
+ *
+ */
+t_sts	death_monitor(t_ctx *ctx);
 
 /**
  * MUTEX

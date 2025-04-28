@@ -6,7 +6,7 @@
 #    By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/05 17:48:31 by vvoronts          #+#    #+#              #
-#    Updated: 2025/04/24 11:43:10 by ipetrov          ###   ########.fr        #
+#    Updated: 2025/04/28 09:19:07 by ipetrov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ SRC 				=	\
 						cleaning.c \
 						initializing.c \
 						main.c \
+						monitor.c \
 						mutex.c \
 						numbers.c \
 						parsing.c \

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:44:38 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 06:19:19 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 09:26:26 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_sts	get_time(t_time_type type, t_time *dst, t_time start_time)
  * @param waittime // in ms
  * @return int
  */
-t_sts	psleep(t_time waittime, t_philo *philo)
+t_sts	smart_sleep(t_time waittime, t_ctx *ctx)
 {
 	t_time	start;
 	t_time	timeout;
@@ -76,13 +76,13 @@ t_sts	psleep(t_time waittime, t_philo *philo)
 		{
 			if (usleep(timeout - 1e3) == ER)
 				return (puterr("usleep: Error: Interrupted system call\n"));
-			if (mtx_lock(&philo->ctx->lock) != OK)
+			if (mtx_lock(&ctx->lock) != OK)
 				return (FAIL);
-			if (get_time(MS, &now, &philo->ctx->start_time) != OK)
+			if (get_time(MS, &now, ctx->start_time) != OK)
 				return (ER);
-			if (is_end(philo->ctx)) //
+			if (is_end(ctx)) //
 				return (FAIL); // unlock mtx here
-			if (mtx_unlock(&philo->ctx->lock) != OK)
+			if (mtx_unlock(&ctx->lock) != OK)
 				return (FAIL);
 		}
 		else

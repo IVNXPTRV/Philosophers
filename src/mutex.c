@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 08:09:48 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/27 07:58:42 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 09:15:39 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
  *   [EINVAL]           The value specified by mutex is invalid.
  *   [EBUSY]            Mutex is locked. / Error: Device or resource busy
  */
-int	mtx_destroy(t_mtx *mtx)
+t_sts	mtx_destroy(t_mtx *mtx)
 {
-	int	code;
+	t_sts	code;
 
 	code = pthread_mutex_destroy(mtx);
 	if (code == 0)
@@ -42,9 +42,9 @@ int	mtx_destroy(t_mtx *mtx)
  *		[EINVAL]           The value specified by attr is invalid. / Error: Invalid argument
  *		[ENOMEM]           The process cannot allocate enough memory to create another mutex. / Error: Cannot allocate memory
  */
-int	mtx_init(t_mtx *mtx)
+t_sts	mtx_init(t_mtx *mtx)
 {
-	int	code;
+	t_sts	code;
 
 	code = pthread_mutex_init(mtx, NULL);
 	if (code == 0)
@@ -65,9 +65,9 @@ int	mtx_init(t_mtx *mtx)
  *		[EINVAL]           The value specified by mutex is invalid. / Error: Invalid argument
  *		[EDEADLK]          A deadlock would occur if the thread blocked waiting for mutex. / Error: Resource deadlock avoided
  */
-int	mtx_lock(t_mtx *lock)
+t_sts	mtx_lock(t_mtx *lock)
 {
-	int	code;
+	t_sts	code;
 
 	code = pthread_mutex_lock(lock);
 	if (code == 0)
@@ -88,9 +88,9 @@ int	mtx_lock(t_mtx *lock)
  *		[EINVAL]           The value specified by mutex is invalid. / Error: Invalid argument
  *		[EPERM]            The current thread does not hold a lock on mutex. / Error: Operation not permitted
  */
-int	mtx_unlock(t_mtx *lock)
+t_sts	mtx_unlock(t_mtx *lock)
 {
-	int	code;
+	t_sts	code;
 
 	code = pthread_mutex_unlock(lock);
 	if (code == 0)

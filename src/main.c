@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 06:39:58 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/25 03:53:38 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/28 09:15:06 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  * ./philo    5    800  200   200     7
  * 		   philos  die  eat  sleep  meals
 */
-t_sts	main(t_int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_ctx	ctx;
 
@@ -27,11 +27,7 @@ t_sts	main(t_int ac, char **av)
 		return (EXIT_FAILURE);
 	if (init_data(&ctx) != OK)
 		return (EXIT_FAILURE);
-	if (run_simulation(&ctx) != OK)
-	{
-		clean(&ctx);
-		return (EXIT_FAILURE);
-	}
+	run_simulation(&ctx);
 	clean(&ctx);
 	return (EXIT_SUCCESS);
 }
