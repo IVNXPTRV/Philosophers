@@ -6,13 +6,13 @@
 #    By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/05 17:48:31 by vvoronts          #+#    #+#              #
-#    Updated: 2025/04/30 10:03:31 by ipetrov          ###   ########.fr        #
+#    Updated: 2025/04/30 10:12:23 by ipetrov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Compiler and flags
 CC					=	cc
-CFLAGS				=	-Wall -Wextra -Werror -Wunreachable-code -g -MMD -MF -fsanitize=thread -pthread -O1
+CFLAGS				=	-fsanitize=thread -pthread -O1 -Wall -Wextra -Werror -Wunreachable-code -g -MMD -MF
 RM					=	rm -rf
 
 # Name of the output library
@@ -54,7 +54,7 @@ all: $(NAME)
 # Link mandatory object files
 $(NAME): $(OBJ)
 	@echo "Building $(NAME) ..."
-	@$(CC) $(OBJ) -o $@
+	@$(CC) -fsanitize=thread  $(OBJ) -o $@
 	@echo "$(NAME) has been built"
 
 # Compile mandatory object files

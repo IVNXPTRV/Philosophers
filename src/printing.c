@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:23:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/30 08:22:50 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/30 10:06:18 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,11 @@
 t_sts	puterr(char *msg)
 {
 	static t_mtx	lock = PTHREAD_MUTEX_INITIALIZER;
+	ssize_t i;
 
 	mtx_lock(&lock);
-	write(STDERR_FILENO, msg, ft_strlen(msg));
+	i = write(STDERR_FILENO, msg, ft_strlen(msg));
+	i++;
 	mtx_unlock(&lock);
 	return (ER);
 }

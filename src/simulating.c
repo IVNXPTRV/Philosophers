@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/30 09:39:39 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/30 10:12:49 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,6 +249,7 @@ void	*philo_routine(void *ptr)
 {
 	t_philo	*philo;
 	t_bool	end;
+	// static int test = 0;
 
 	philo = (t_philo *)ptr;
 	end = false;
@@ -264,6 +265,7 @@ void	*philo_routine(void *ptr)
 			break ;
 		if (philo_think(philo) != OK)
 			break ;
+		// test += 123;
 	}
 	// set global simulation end to true
 	mtx_lock(&philo->ctx->lock);
