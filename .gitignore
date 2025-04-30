@@ -14,7 +14,7 @@ philo
 # trashy
 .DS_store
 *.txt
-*.py
+# *.py
 *.md
 *.lldb
 *.png
