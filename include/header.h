@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/30 08:23:48 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/30 08:25:47 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
-	t_mtx			lock;				// protect internals of t_philo specifically last_meal_time
 	t_int			id;					// number of philo starting from 1
 	t_tid			tid; 				// thread id internal for pthread
 	t_int 			meals_eaten;		// -1 if not provided, otherwise number of meals eaten

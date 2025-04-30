@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 06:24:14 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 11:45:25 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/30 08:27:14 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,7 @@ t_sts	death_monitor(t_ctx *ctx)
 		while (i < ctx->num_philos)
 		{
 			if (is_dead(&ctx->philos[i], now))
-			{
-				printf("monitor found death\n");
 				return (FAIL);
-			}
 			i++;
 		}
 		if (mtx_unlock(&ctx->lock) != OK)
