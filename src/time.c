@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:44:38 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 11:33:32 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/30 09:33:25 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ t_sts	smart_sleep(t_time waittime, t_ctx *ctx)
 	timeout = TIMEOUT * 1e3;
 	while (rem > 1e3)
 	{
-		// printf("rem to sleep: %ld\n", rem);
 		if (rem > timeout) // 100 000 timeout to check if simulation ended
 		{
 			if (usleep(timeout - 2e3) == ER)

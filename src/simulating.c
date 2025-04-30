@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/30 08:32:39 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/30 09:39:39 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,17 @@ static t_sts take_forks(t_philo *philo, t_time now)
 		return (FAIL);
 	if (putmsg(philo, now, FORK_1) != OK)
 		return (FAIL);
+	if (philo->ctx->num_philos == 1)
+	{
+		if (mtx_unlock(&philo->ctx->lock) != OK)
+			return (FAIL);
+		if (smart_sleep(philo->ctx->time_to_die + 50, philo->ctx) != OK)
+			return (FAIL);
+		if (mtx_lock(&philo->ctx->lock) != OK)
+			return (FAIL);
+		if (is_end(philo->ctx)) //
+			return (FAIL); // unlock mtx here
+	}
 	if (take_fork(philo->fork_two) != OK)
 		return (FAIL);
 	if (putmsg(philo, now, FORK_2) != OK)
@@ -140,20 +151,21 @@ inline t_sts is_all_full(t_philo *philo)
 t_sts	philo_delay(t_philo *philo)
 {
 	// last philo if total num is odd will wait 2 eat times
-	if (philo->id == philo->ctx->num_philos && philo->ctx->num_philos % 2)
+	if (philo->id == philo->ctx->num_philos && philo->ctx->num_philos % 2
+		&& philo->ctx->num_philos > 1)
 	{
 		if (smart_sleep(2 * philo->ctx->time_to_eat, philo->ctx) != OK)
 			return (FAIL);
 	}
 	else
 	{
-		// each odd philo will wait 1 eat time
-		if (philo->id % 2)
+		// each even philo will wait 1 eat time
+		if (philo->id % 2 == 0)
 		{
 			if (smart_sleep(philo->ctx->time_to_eat, philo->ctx) != OK)
 				return (FAIL);
 		}
-		// each even philo will not wait
+		// each odd philo will not wait
 	}
 	return (OK);
 }
@@ -257,6 +269,7 @@ void	*philo_routine(void *ptr)
 	mtx_lock(&philo->ctx->lock);
 	philo->ctx->end = TRUE;
 	mtx_unlock(&philo->ctx->lock);
+
 	return (NULL);
 }
 
