@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/30 08:25:47 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/30 09:50:22 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include <string.h> // memset()
 #include <errno.h> // EINVAL and otehr codes
 
-#define DEBUG true
+#define DEBUG false
 #define UNDEFINED -1
 #define TRUE true
 #define FALSE false
@@ -36,7 +36,7 @@
 #define PRNME "philo: "
 #define ERPTR "\xFF"
 #define OKPTR "\x01"
-#define MSG "%12lld %3lld %s"
+#define MSG "%lld %lld %s" // "%12lld %3lld %s"
 #define TIMEOUT 200 // 100ms timeout for sleeping or eating to check if simulation should be ended
 #define RED     "\033[31m"
 #define RESET   "\033[0m\n"
