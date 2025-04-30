@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:23:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/30 10:06:18 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/30 10:19:02 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_sts	puterr(char *msg)
 
 	mtx_lock(&lock);
 	i = write(STDERR_FILENO, msg, ft_strlen(msg));
-	i++;
+	(void)i;
 	mtx_unlock(&lock);
 	return (ER);
 }
