@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 11:44:27 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/30 08:32:39 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,9 +127,9 @@ inline t_sts is_all_full(t_philo *philo)
 		philo->ctx->num_full_philos += 1;
 		if (philo->ctx->num_full_philos == philo->ctx->num_philos)
 		{
-			if (mtx_unlock(&philo->ctx->lock) != OK)
-				return (FAIL);
+			philo->ctx->end = TRUE;
 			printf("\nAll philos are full. Simulation is stopped.\n");
+			mtx_unlock(&philo->ctx->lock);
 			return (TRUE);
 		}
 	}
