@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:23:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 10:42:41 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/04/30 08:22:50 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ static char *get_msg(t_msg msg)
 static t_sts put_debug_msg(t_time now, t_philo *philo, t_msg msg)
 {
 	if (msg == FORK_1)
-		return (printf(MSG" [%ld]\n", now, philo->id, get_msg(msg), philo->fork_one->id));
+		return (printf(MSG" [%lld]\n", now, philo->id, get_msg(msg), philo->fork_one->id));
 	if (msg == FORK_2)
-		return (printf(MSG" [%ld]\n", now, philo->id, get_msg(msg), philo->fork_two->id));
+		return (printf(MSG" [%lld]\n", now, philo->id, get_msg(msg), philo->fork_two->id));
 	if (msg == EAT)
-		return (printf(MSG" [%ld]\n", now, philo->id, get_msg(msg), philo->meals_eaten));
+		return (printf(MSG" [%lld]\n", now, philo->id, get_msg(msg), philo->meals_eaten));
 	if (msg == SLEEP || msg == THINK || msg == DIED)
 		return (printf(MSG"\n", now, philo->id, get_msg(msg)));
 	return (OK);
