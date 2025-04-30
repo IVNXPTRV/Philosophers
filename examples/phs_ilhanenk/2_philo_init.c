@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_philo_init.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikhanenk <ikhanenk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 13:52:43 by ikhanenk          #+#    #+#             */
-/*   Updated: 2025/04/30 17:57:59 by ikhanenk         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:52:51 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	ft_check_and_init_args(int argc, char **argv, t_params *params)
 		if (i != 1 && i != 5)
 		{
 			if (n < 60 || n > 1000000 || ft_check_digit(argv[i]) != 0)
-				return (write(2, "Write num > 60 and < 1000000 ms\n", 41));
+				return (write(2, "Write num > 60 and < 1000000 ms\n", 33));
 		}
 	}
 	params->num_phs = ft_atoi(argv[1]);
