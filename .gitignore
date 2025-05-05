@@ -2,7 +2,8 @@
 .vscode
 
 # program
-philo
+/philo/philo
+/philo_bonus/philo
 
 # objects and dependencies
 **/dep/*
