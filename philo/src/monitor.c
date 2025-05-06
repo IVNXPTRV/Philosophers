@@ -23,10 +23,10 @@ t_sts	death_monitor(t_ctx *ctx)
 	{
 		if (mtx_lock(&ctx->lock) != OK)
 			return (FAIL);
-		if (is_end(ctx)) //
-			return (FAIL); // unlock mtx here
+		if (is_end(ctx))
+			return (FAIL);
 		if (get_time(MS, &now, ctx->start_time) != OK)
-			return (FAIL); // unlock mtx here
+			return (FAIL);
 		i = 0;
 		while (i < ctx->num_philos)
 		{

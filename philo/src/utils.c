@@ -50,7 +50,7 @@ void	*ft_calloc(size_t num, size_t size)
 	{
 		result = (void *)malloc(0);
 		if (!result)
-			puterr(PRNME"malloc: allocation failed\n");
+			puterr(PRNME "malloc: allocation failed\n");
 		return (result);
 	}
 	if (num > SIZE_MAX / size)
@@ -59,7 +59,7 @@ void	*ft_calloc(size_t num, size_t size)
 	result = malloc(total);
 	if (!result)
 	{
-		puterr(PRNME"malloc: allocation failed\n");
+		puterr(PRNME "malloc: allocation failed\n");
 		return (NULL);
 	}
 	while (total--)
@@ -120,29 +120,3 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	}
 	return (dest);
 }
-
-// t_time get_delay()
-// {
-// 	t_time start;
-// 	t_time end;
-// 	struct timeval tv;
-// 	int i;
-// 	int j;
-
-// 	i = 0;
-// 	j = 200;
-
-// 	while (i < j)
-// 	{
-// 		gettimeofday(&tv, NULL);
-
-// 		i++;
-// 	}
-
-// 	start = get_time();
-// 	// smart_sleep(usec);
-// 	usleep(usec);
-// 	end = get_time();
-
-// 	return (end - start - usec);
-// }

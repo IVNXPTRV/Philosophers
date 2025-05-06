@@ -29,28 +29,29 @@
  *  number_of_philosophers time_to_die time_to_eat time_to_sleep
  *  [number_of_times_each_philosopher_must_eat]
  * ./philo    5    800  200   200     7
- * 		   philos  die  eat  sleep  meals
-*/
+ * 			philos  die  eat  sleep  meals
+ */
 t_sts	parse_input(t_ctx *ctx, t_int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
-		return (puterr(PRNME"wrong number of arguments\n"));
+		return (puterr(PRNME "wrong number of arguments\n"));
 	if (ft_atoi(&ctx->num_philos, av[1]) != OK)
 		return (ER);
 	if (ctx->num_philos == 0)
-		return (puterr(PRNME"number of philos has to be greater then 0\n"));
+		return (puterr(PRNME "number of philos has to be greater then 0\n"));
 	if (ft_atoi(&ctx->time_to_die, av[2]) != OK)
 		return (ER);
 	if (ft_atoi(&ctx->time_to_eat, av[3]) != OK)
 		return (ER);
 	if (ft_atoi(&ctx->time_to_sleep, av[4]) != OK)
 		return (ER);
-	if (ctx->time_to_die == 0 || ctx->time_to_eat == 0 || ctx->time_to_sleep == 0)
-		return (puterr(PRNME"time has to be greater then 0\n"));
+	if (ctx->time_to_die == 0 || ctx->time_to_eat == 0
+		|| ctx->time_to_sleep == 0)
+		return (puterr(PRNME "time has to be greater then 0\n"));
 	ctx->meals_to_eat = -1;
 	if (av[5] && ft_atoi(&ctx->meals_to_eat, av[5]) != OK)
 		return (ER);
 	if (ctx->meals_to_eat == 0)
-		return (puterr(PRNME"number of meals can't be 0\n"));
+		return (puterr(PRNME "number of meals can't be 0\n"));
 	return (OK);
 }

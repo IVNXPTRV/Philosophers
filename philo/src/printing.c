@@ -24,7 +24,7 @@
 t_sts	puterr(char *msg)
 {
 	static t_mtx	lock = PTHREAD_MUTEX_INITIALIZER;
-	ssize_t i;
+	ssize_t			i;
 
 	mtx_lock(&lock);
 	i = write(STDERR_FILENO, msg, ft_strlen(msg));
@@ -33,7 +33,7 @@ t_sts	puterr(char *msg)
 	return (ER);
 }
 
-static char *get_msg(t_msg msg)
+static char	*get_msg(t_msg msg)
 {
 	if (msg == FORK_1 || msg == FORK_2)
 		return ("has taken a fork");
@@ -48,16 +48,19 @@ static char *get_msg(t_msg msg)
 	return (NULL);
 }
 
-static t_sts put_debug_msg(t_time now, t_philo *philo, t_msg msg)
+static t_sts	put_debug_msg(t_time now, t_philo *philo, t_msg msg)
 {
 	if (msg == FORK_1)
-		return (printf(MSG" [%lld]\n", now, philo->id, get_msg(msg), philo->fork_one->id));
+		return (printf(MSG " [%lld]\n", now, philo->id, get_msg(msg),
+				philo->fork_one->id));
 	if (msg == FORK_2)
-		return (printf(MSG" [%lld]\n", now, philo->id, get_msg(msg), philo->fork_two->id));
+		return (printf(MSG " [%lld]\n", now, philo->id, get_msg(msg),
+				philo->fork_two->id));
 	if (msg == EAT)
-		return (printf(MSG" [%lld]\n", now, philo->id, get_msg(msg), philo->meals_eaten));
+		return (printf(MSG " [%lld]\n", now, philo->id, get_msg(msg),
+				philo->meals_eaten));
 	if (msg == SLEEP || msg == THINK || msg == DIED)
-		return (printf(MSG"\n", now, philo->id, get_msg(msg)));
+		return (printf(MSG "\n", now, philo->id, get_msg(msg)));
 	return (OK);
 }
 
@@ -75,20 +78,7 @@ t_sts	putmsg(t_philo *philo, t_time now, t_msg msg)
 {
 	if (DEBUG)
 		put_debug_msg(now, philo, msg);
-	else if (printf(MSG"\n", now, philo->id, get_msg(msg)) < 0)
+	else if (printf(MSG "\n", now, philo->id, get_msg(msg)) < 0)
 		return (puterr("printf: failed\n"));
 	return (OK);
 }
-
-// //put_msg tester
-// int main()
-// {
-// 	t_philo philo;
-// 	t_ctx ctx;
-
-// 	memset(&philo, 0, sizeof(t_philo));
-// 	memset(&ctx, 0, sizeof(t_ctx));
-// 	philo.ctx->time_to_die = 800 * 1e3;
-// 	philo.ctx->start_time = get_time
-// 	philo.ctx = &ctx;
-// }

@@ -13,11 +13,12 @@
 #include "header.h"
 
 /*
- * ./philo 5 800 200 200 7 -- no one dies, sim stops when each philo has eaten 7 meals
+ * ./philo 5 800 200 200 7 -- no one dies,
+	sim stops when each philo has eaten 7 meals
  *
  * ./philo    5    800  200   200     7
- * 		   philos  die  eat  sleep  meals
-*/
+ * 			philos  die  eat  sleep  meals
+ */
 int	main(int ac, char **av)
 {
 	t_ctx	ctx;
@@ -31,16 +32,3 @@ int	main(int ac, char **av)
 	clean(&ctx);
 	return (EXIT_SUCCESS);
 }
-
-// // tester for philo_wait
-// int	main()
-// {
-// 	t_time start;
-// 	t_time end;
-
-// 	get_time(&start, 0);
-// 	philo_wait(10000);
-// 	get_time(&end, 0);
-// 	printf("real wait: %ld\n", end - start);
-// 	return (EXIT_SUCCESS);
-// }

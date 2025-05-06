@@ -19,7 +19,7 @@ t_int	clean_ctx(t_ctx **ctx)
 	return (OK);
 }
 
-t_int clean_forks(t_ctx *ctx)
+t_int	clean_forks(t_ctx *ctx)
 {
 	t_int	i;
 
@@ -34,23 +34,14 @@ t_int clean_forks(t_ctx *ctx)
 	return (OK);
 }
 
-// add mtx destroy
-t_int clean_philos(t_philo **philos)
+t_int	clean_philos(t_philo **philos)
 {
-	// t_int	i;
-
-	// i = 0;
-	// while (*philos + i)
-	// {
-	// 	mtx_destroy(&(philos[i])->lock);
-	// 	i++;
-	// }
 	free(*philos);
 	*philos = NULL;
 	return (OK);
 }
 
-t_sts join_threads(t_ctx *ctx)
+t_sts	join_threads(t_ctx *ctx)
 {
 	t_int	i;
 
@@ -63,12 +54,9 @@ t_sts join_threads(t_ctx *ctx)
 	return (OK);
 }
 
-// join threads
-// cleans structs
-t_sts clean(t_ctx *ctx)
+t_sts	clean(t_ctx *ctx)
 {
 	join_threads(ctx);
-	// printf("pass join..\n");
 	clean_philos(&ctx->philos);
 	clean_forks(ctx);
 	clean_ctx(&ctx);

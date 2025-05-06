@@ -14,7 +14,7 @@
 
 /**
  * @brief Allocate all philos, init all members except of ptid
- * 		  Distribute forks properly
+ * 			Distribute forks properly
  *
  * @param ctx
  * @return int
@@ -46,8 +46,6 @@ t_sts	allocate_philos(t_ctx *ctx)
 	return (OK);
 }
 
-// set state of fork false
-// set id of fork starting from 1
 t_sts	allocate_forks(t_ctx *ctx)
 {
 	t_int	i;
@@ -70,7 +68,6 @@ t_sts	allocate_forks(t_ctx *ctx)
 	return (OK);
 }
 
-
 /**
  * @brief
  *
@@ -84,8 +81,9 @@ t_sts	attach_philos(t_ctx *ctx)
 	i = 0;
 	while (i < ctx->num_philos)
 	{
-		if (th_create(&ctx->philos[i].tid, philo_routine, &ctx->philos[i]) != OK)
-			return (ER); // some shut down mutex force all threads wait util main thread clean eveything and exit
+		if (th_create(&ctx->philos[i].tid, philo_routine,
+				&ctx->philos[i]) != OK)
+			return (ER);
 		i++;
 	}
 	return (OK);
@@ -99,7 +97,7 @@ t_sts	init_ctx(t_ctx *ctx)
 {
 	if (mtx_init(&ctx->lock) != OK)
 		return (ER);
-	if (mtx_lock(&ctx->lock) != OK) // lock mutex here to be able later to run all philo at once
+	if (mtx_lock(&ctx->lock) != OK)
 		return (ER);
 	if (ctx->num_philos % 2)
 		ctx->time_to_think = 2 * ctx->time_to_eat - ctx->time_to_sleep;
@@ -113,7 +111,7 @@ t_sts	init_ctx(t_ctx *ctx)
 /*
  * Initializing main structures
  *
-*/
+ */
 t_sts	init_data(t_ctx *ctx)
 {
 	if (init_ctx(ctx) != OK)
