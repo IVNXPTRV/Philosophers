@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 09:48:46 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:19:10 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,7 @@ t_sts					is_end(t_ctx *ctx);
 t_sts					get_time(t_time_type type, t_time *dst,
 							t_time start_time);
 t_sts					smart_sleep(t_time waittime, t_philo *philo);
+t_sts	sched(void);
 
 /**
  * PARSING

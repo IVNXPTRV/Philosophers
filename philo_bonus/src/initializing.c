@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:21:35 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 17:08:00 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:16:19 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,10 @@ t_sts	init_ctx(t_ctx *ctx)
 	if (ft_sem_open(&ctx->lock, LOCKNME, 0) != OK)
 		return (ER);
 	if (ft_sem_open(&ctx->full, FULLNME, 0) != OK)
+	{
+		clean_sem(LOCKNME, ctx->lock);
 		return (ER);
+	}
 	if (ctx->num_philos % 2)
 		ctx->time_to_think = 2 * ctx->time_to_eat - ctx->time_to_sleep;
 	else

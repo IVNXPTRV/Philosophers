@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 06:24:14 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 16:50:46 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:32:56 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void *full_monitor(void *ptr)
 		ctx->num_full_philos++;
 		if (ctx->num_full_philos == ctx->num_philos)
 		{
-			//print everyone is full here
+			printf("\nAll philos are full. Simulation is stopped.\n"); //print everyone is full here
 			clean_philos(ctx); //kill all processes
 			return (NULL);
 		}
@@ -53,18 +53,11 @@ t_sts	end_monitor(t_ctx *ctx)
 				break ;
 			return (puterr("waitpid: failed\n"));
 		}
-		if (WEXITSTATUS(status) == DIED)
+		if (WEXITSTATUS(status) == DIED || WEXITSTATUS(status) == ER)
 		{
 			clean_philos(ctx); //kill all processes
 			break ;
 		}
-		else if (WEXITSTATUS(status) == ER)
-		{
-			clean_philos(ctx); //kill all processes
-			break ;
-		}
-		if (ft_sem_post(ctx->lock) != OK) // continue simulation after check
-			return (ER);
 	}
 	ctx->end = true;
 	if (ft_sem_post(ctx->full) != OK)

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:44:38 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 09:30:40 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:28:35 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,14 @@ t_sts	get_time(t_time_type type, t_time *dst, t_time start_time)
 	return (OK);
 }
 
-t_sts	choose_duration_to_sleep(t_time	start, t_time *waittime, t_philo *philo)
+t_sts	choose_duration_to_sleep(t_time	start, t_time *waittime, t_time *rem, t_philo *philo)
 {
 	t_time death_time;
 
 	death_time = philo->last_meal_time * 1e3 + philo->ctx->time_to_die * 1e3;
 	if (start + *waittime > death_time)
 		*waittime = death_time - start;
+	*rem = *waittime;
 	return (OK);
 }
 
@@ -91,9 +92,8 @@ t_sts	smart_sleep(t_time waittime, t_philo *philo)
 	if (get_time(US, &start, philo->ctx->start_time * 1e3) != OK)
 		return (ER);
 	waittime *= 1e3;
-	if (choose_duration_to_sleep(start, &waittime, philo) != OK)
+	if (choose_duration_to_sleep(start, &waittime, &rem, philo) != OK)
 		return (ER);
-	rem = waittime;
 	while (rem > 1e3)
 	{
 		if (usleep(rem / 2) == ER)
@@ -109,5 +109,13 @@ t_sts	smart_sleep(t_time waittime, t_philo *philo)
 	}
 	if (is_dead(philo, now / 1e3))
 		return (FAIL);
+	return (OK);
+}
+
+// force reschedule -> vacate quantum
+t_sts	sched(void)
+{
+	if (usleep(1) == ER)
+		return (puterr("usleep: Error: Interrupted system call\n"));
 	return (OK);
 }

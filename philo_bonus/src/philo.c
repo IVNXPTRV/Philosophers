@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 03:05:16 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 08:19:06 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:20:42 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,11 @@ t_sts	philo_think(t_philo *philo)
 			return (FAIL);
 	}
 	else
-		usleep(1);
+	{
+		if (sched() != OK)
+			return (ER);
+	}
+
 	return (OK);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 04:20:03 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 17:06:27 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:13:29 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_sts ft_sem_close(sem_t *sem)
 
 	code = sem_close(sem);
 	if (code == ER)
-		return (puterr("sem_close: failed"));
+		return (puterr("sem_close: failed\n"));
 	return (OK);
 }
 
@@ -53,7 +53,7 @@ t_sts ft_sem_unlink(char *name)
 
 	code = sem_unlink(name);
 	if (code == EACCES || code == ENAMETOOLONG)
-		return (puterr("sem_unlink: failed"));
+		return (puterr("sem_unlink: failed\n"));
 	(void)code;
 	return (OK);
 }
@@ -90,7 +90,7 @@ t_sts ft_sem_open(sem_t **sem, char *name, t_int value)
 	ft_sem_unlink(name);
 	*sem = sem_open(name, O_CREAT, 0644, value);
 	if (*sem == SEM_FAILED)
-		return (puterr("sem_open: failed"));
+		return (puterr("sem_open: failed\n"));
 	return (OK);
 }
 
@@ -110,7 +110,7 @@ t_sts ft_sem_post(sem_t *sem)
 
 	code = sem_post(sem);
 	if (code == ER)
-		return (puterr("sem_post: failed"));
+		return (puterr("sem_post: failed\n"));
 	return (OK);
 }
 
@@ -132,7 +132,7 @@ t_sts ft_sem_wait(sem_t *sem)
 
 	code = sem_wait(sem);
 	if (code == ER)
-		return (puterr("sem_wait: failed"));
+		return (puterr("sem_wait: failed\n"));
 	return (OK);
 }
 

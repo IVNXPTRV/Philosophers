@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 03:02:36 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 09:37:52 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:33:45 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ inline t_sts	is_full(t_philo *philo)
 	{
 		if (ft_sem_post(philo->ctx->full) != OK)
 			return (ER);
-		usleep(1); // to prevent is thinking after is eating??
+		if (sched() != OK)
+			return (ER);
 	}
 	return (FALSE);
 }

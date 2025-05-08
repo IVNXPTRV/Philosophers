@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 03:01:39 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 09:29:58 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:20:23 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ t_sts	take_forks(t_philo *philo)
 		return (FAIL);
 	if (ft_sem_post(philo->ctx->lock) != OK)
 		return (FAIL);
-	usleep(1);
+	if (sched() != OK)
+		return (ER);
 	return (OK);
 }
 
