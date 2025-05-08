@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 06:24:14 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 07:46:06 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 09:45:35 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ t_sts	end_monitor(t_ctx *ctx)
 
 	if (th_create(&tid, full_monitor, (void *)ctx) != OK)
 		return (ER);
-	pthread_detach(tid); // make error wrapper
 	while (true)
 	{
 		code = waitpid(ANYPID, &status, 0);
@@ -65,5 +64,7 @@ t_sts	end_monitor(t_ctx *ctx)
 		if (ft_sem_post(ctx->lock) != OK) // continue simulation after check
 			return (ER);
 	}
+	if (th_join(&tid) != OK)
+		return (ER);
 	return (OK);
 }
