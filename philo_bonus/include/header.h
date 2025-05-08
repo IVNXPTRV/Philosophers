@@ -14,18 +14,18 @@
 # define HEADER_H
 
 # include <errno.h>
+# include <fcntl.h> /* For O_* constants */
 # include <pthread.h>
+# include <semaphore.h>
+# include <signal.h>
 # include <stdbool.h>
 # include <stdint.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/time.h>
+# include <sys/wait.h>
 # include <unistd.h>
-# include <semaphore.h> 		// sem_open
-# include <fcntl.h>           /* For O_* constants */
-# include <signal.h>			//kill
-#include <sys/wait.h> 			//waitpid
 
 # define DEBUG false
 # define UNDEFINED -1
@@ -45,7 +45,7 @@
 # define ERPTR "\xFF"
 # define OKPTR "\x01"
 # define MSG "%lld %lld %s"
-# define TIMEOUT 1000 // 1 sec timeout
+# define TIMEOUT 1000
 # define RED "\033[31m"
 # define RESET "\033[0m\n"
 
@@ -83,38 +83,37 @@ typedef enum e_time_type
 	MS
 }						t_time_type;
 
-
 typedef struct s_philo
 {
-	t_int			id;					// number of philo starting from 1
-	pid_t			pid; 				// process id
-	// VAR
-	t_ctx			*ctx;
-	t_int 			meals_eaten;		// -1 if not provided, otherwise number of meals eaten
-	t_time			last_meal_time;		// last meal start time in milliseconds
-} t_philo;
+	t_int				id;
+	pid_t				pid;
+
+	t_ctx				*ctx;
+	t_int				meals_eaten;
+	t_time				last_meal_time;
+}						t_philo;
 
 /*
  * context
-*/
+ */
 typedef struct s_ctx
 {
-	sem_t			*lock;				// serialization lock, binary semaphore
-	sem_t			*full;				// binary lock to check in full philo
-	// ** CONST **
-	t_int			num_philos;			// number of philos
-	t_bool			end;				// end flag for full_monitor
-	t_int			num_full_philos;	// number of full philos
-	t_int			meals_to_eat;		// num of meals to eat -1 if UNDEFINED
-	t_time			time_to_die;		// in mlliseconds, read-only
-	t_time			time_to_eat;		// in mlliseconds, read-only
-	t_time			time_to_sleep;		// in mlliseconds, read-only
-	t_time			time_to_think;		// in mlliseconds, read-only
-	t_time			start_time;			// simulation starting point in mlliseconds
-	// ** TO CLEAN **
-	t_philo			philos[200]; 		// array of philos
-	sem_t			*forks; 			// array of forks
-} t_ctx;
+	sem_t				*lock;
+	sem_t				*full;
+
+	t_int				num_philos;
+	t_bool				end;
+	t_int				num_full_philos;
+	t_int				meals_to_eat;
+	t_time				time_to_die;
+	t_time				time_to_eat;
+	t_time				time_to_sleep;
+	t_time				time_to_think;
+	t_time				start_time;
+
+	t_philo				philos[200];
+	sem_t				*forks;
+}						t_ctx;
 
 /*
  * UTILS
@@ -134,7 +133,7 @@ t_sts					putmsg(t_philo *philo, t_time now, t_msg msg);
 /**
  * STATUS
  */
-t_sts	is_dead(t_philo *philo, t_time now, t_int flag);
+t_sts					is_dead(t_philo *philo, t_time now, t_int flag);
 t_sts					is_end(t_ctx *ctx);
 
 /**
@@ -143,7 +142,7 @@ t_sts					is_end(t_ctx *ctx);
 t_sts					get_time(t_time_type type, t_time *dst,
 							t_time start_time);
 t_sts					smart_sleep(t_time waittime, t_philo *philo);
-t_sts	sched(void);
+t_sts					sched(void);
 
 /**
  * PARSING
@@ -167,31 +166,30 @@ t_sts					philo_eat(t_philo *philo);
  *
  */
 t_sts					init_data(t_ctx *ctx);
-t_sts	init_start_time(t_ctx *ctx);
+t_sts					init_start_time(t_ctx *ctx);
 
 /**
  * MONITOR
  *
  */
-t_sts	end_monitor(t_ctx *ctx);
+t_sts					end_monitor(t_ctx *ctx);
 
 /**
  * SEMAPHORE
  *
  */
-t_sts ft_sem_open(sem_t **sem, char *name, t_int value);
-t_sts ft_sem_close(sem_t *sem);
-t_sts ft_sem_unlink(char *name);
-t_sts ft_sem_post(sem_t *sem);
-t_sts ft_sem_wait(sem_t *sem);
-
+t_sts					ft_sem_open(sem_t **sem, char *name, t_int value);
+t_sts					ft_sem_close(sem_t *sem);
+t_sts					ft_sem_unlink(char *name);
+t_sts					ft_sem_post(sem_t *sem);
+t_sts					ft_sem_wait(sem_t *sem);
 
 /**
  * MUTEX
  *
  */
-t_sts	mtx_lock(t_mtx *lock);
-t_sts	mtx_unlock(t_mtx *lock);
+t_sts					mtx_lock(t_mtx *lock);
+t_sts					mtx_unlock(t_mtx *lock);
 
 /**
  * THREAD
@@ -201,19 +199,18 @@ t_sts					th_create(pthread_t *tid, void *func(void *),
 							void *arg);
 t_sts					th_join(pthread_t *tid);
 
-
 /**
  * FORK
  *
  */
-t_sts ft_fork(pid_t *pid);
+t_sts					ft_fork(pid_t *pid);
 
 /**
  * CLEANING
  *
  */
-t_int	clean_sem(char *name, sem_t *sem);
-t_int	clean_philos(t_ctx *ctx);
+t_int					clean_sem(char *name, sem_t *sem);
+t_int					clean_philos(t_ctx *ctx);
 t_sts					clean_ctx(t_ctx *ctx);
 t_sts					clean(t_ctx *ctx);
 

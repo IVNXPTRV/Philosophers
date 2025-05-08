@@ -36,7 +36,6 @@ t_sts	allocate_philos(t_ctx *ctx)
 	return (OK);
 }
 
-// ctx->num_philos - 1 -- to prevent deadlock ????
 t_sts	allocate_forks(t_ctx *ctx)
 {
 	if (ft_sem_open(&ctx->forks, FORKSNME, ctx->num_philos) != OK)
@@ -58,8 +57,8 @@ t_sts	attach_philos(t_ctx *ctx)
 	while (i < ctx->num_philos)
 	{
 		if (ft_fork(&ctx->philos[i].pid) != OK)
-			return (ER); // clean previously cretaed proccesses
-		if (ctx->philos[i].pid == 0) // child
+			return (ER);
+		if (ctx->philos[i].pid == 0)
 			philo_routine(&ctx->philos[i]);
 		i++;
 	}
@@ -94,7 +93,6 @@ t_sts	init_ctx(t_ctx *ctx)
  */
 t_sts	init_data(t_ctx *ctx)
 {
-
 	if (ft_sem_unlink(LOCKNME) != OK)
 		return (ER);
 	if (ft_sem_unlink(FORKSNME) != OK)

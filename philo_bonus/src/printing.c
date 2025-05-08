@@ -48,7 +48,6 @@ static char	*get_msg(t_msg msg)
 	return (NULL);
 }
 
-
 /**
  * @brief
  * Automatically gets current time for timestamp

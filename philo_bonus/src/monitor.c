@@ -12,9 +12,9 @@
 
 #include "header.h"
 
-static void *full_monitor(void *ptr)
+static void	*full_monitor(void *ptr)
 {
-	t_ctx *ctx;
+	t_ctx	*ctx;
 
 	ctx = (t_ctx *)ptr;
 	while (true)
@@ -26,11 +26,11 @@ static void *full_monitor(void *ptr)
 		ctx->num_full_philos++;
 		if (ctx->num_full_philos == ctx->num_philos)
 		{
-			printf("\nAll philos are full. Simulation is stopped.\n"); //print everyone is full here
-			clean_philos(ctx); //kill all processes
+			printf("\nAll philos are full. Simulation is stopped.\n");
+			clean_philos(ctx);
 			return (NULL);
 		}
-		if (ft_sem_post(ctx->lock) != OK) // continue simulation after check
+		if (ft_sem_post(ctx->lock) != OK)
 			return (NULL);
 	}
 	return (NULL);
@@ -38,23 +38,24 @@ static void *full_monitor(void *ptr)
 
 t_sts	end_monitor(t_ctx *ctx)
 {
-	int status;
-	int	code;
-	pthread_t tid;
+	int			status;
+	int			code;
+	pthread_t	tid;
 
 	if (th_create(&tid, full_monitor, (void *)ctx) != OK)
 		return (ER);
 	while (true)
 	{
 		code = waitpid(ANYPID, &status, 0);
-		if (code == ER) // blocks parent until any child send sighild
+		if (code == ER)
 		{
-			if (errno == ECHILD) // all children collected
+			if (errno == ECHILD)
 				break ;
 			return (puterr("waitpid: failed\n"));
 		}
-		if (!ctx->end && (WEXITSTATUS(status) == DIED || WEXITSTATUS(status) == ER))
-			clean_philos(ctx); // kill all processes
+		if (!ctx->end && (WEXITSTATUS(status) == DIED
+				|| WEXITSTATUS(status) == ER))
+			clean_philos(ctx);
 	}
 	if (ft_sem_post(ctx->full) != OK)
 		return (ER);

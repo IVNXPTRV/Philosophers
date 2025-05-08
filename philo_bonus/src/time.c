@@ -56,9 +56,10 @@ t_sts	get_time(t_time_type type, t_time *dst, t_time start_time)
 	return (OK);
 }
 
-t_sts	choose_duration_to_sleep(t_time	start, t_time *waittime, t_time *rem, t_philo *philo)
+t_sts	choose_duration_to_sleep(t_time start, t_time *waittime, t_time *rem,
+		t_philo *philo)
 {
-	t_time death_time;
+	t_time	death_time;
 
 	death_time = philo->last_meal_time * 1e3 + philo->ctx->time_to_die * 1e3;
 	if (start + *waittime > death_time)
@@ -116,7 +117,6 @@ t_sts	smart_sleep(t_time waittime, t_philo *philo)
 	return (OK);
 }
 
-// force reschedule -> vacate quantum
 t_sts	sched(void)
 {
 	if (usleep(1) == ER)

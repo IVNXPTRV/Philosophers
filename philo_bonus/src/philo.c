@@ -12,7 +12,6 @@
 
 #include "header.h"
 
-// init start time here
 static inline t_sts	stop_before_herd_gate(t_ctx *ctx)
 {
 	if (ft_sem_wait(ctx->lock) != OK)
@@ -86,7 +85,6 @@ t_sts	philo_think(t_philo *philo)
 		if (sched() != OK)
 			return (ER);
 	}
-
 	return (OK);
 }
 

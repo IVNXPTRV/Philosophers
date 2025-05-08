@@ -58,15 +58,15 @@ t_sts	th_create(pthread_t *tid, void *func(void *), void *arg)
  *		The pthread_join() function will fail if:
 
 			*		[EINVAL]           The implementation has detected that the
-			 value specified by thread does not refer to a joinable thread.
+				value specified by thread does not refer to a joinable thread.
 			/ Error: Invalid argument
 
 			*		[ESRCH]            No thread could be found corresponding
-			 to that specified by the given thread ID,
+				to that specified by the given thread ID,
 			thread. / Error: No such process
 
 			*		[EDEADLK]          A deadlock was detected or the value
-			 of thread specifies the calling thread.
+				of thread specifies the calling thread.
 			/ Error: Resource deadlock avoided
  */
 t_sts	th_join(pthread_t *tid)

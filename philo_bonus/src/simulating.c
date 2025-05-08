@@ -14,7 +14,6 @@
 
 t_sts	is_dead(t_philo *philo, t_time now, t_int flag)
 {
-
 	if (now - philo->last_meal_time >= philo->ctx->time_to_die)
 	{
 		if (flag == true)
