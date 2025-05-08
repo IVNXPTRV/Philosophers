@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 06:24:14 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 11:59:41 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 12:30:23 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,10 @@ static void	*full_monitor(void *ptr)
 		ctx->num_full_philos++;
 		if (ctx->num_full_philos == ctx->num_philos)
 		{
-			printf("\nAll philos are full. Simulation is stopped.\n");
 			clean_philos(ctx);
+			printf("\nAll philos are full. Simulation is stopped.\n");
 			return (NULL);
 		}
-		if (ft_sem_post(ctx->lock) != OK)
-			return (NULL);
 	}
 	return (NULL);
 }
