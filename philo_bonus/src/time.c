@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:44:38 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 07:45:02 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 08:12:24 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,10 @@ t_sts	choose_duration_to_sleep(t_time	start, t_time *waittime, t_philo *philo)
 	t_time death_time;
 
 	death_time = philo->last_meal_time * 1e3 + philo->ctx->time_to_die * 1e3;
-	(void)death_time;
+	// printf("id: %lld\ndeathtime: %lld\n", philo->id, death_time);
 	// printf("death_time: %lld\nstart: %lld\n", death_time, start);
-	(void)start;
 	if (start + *waittime > death_time)
-		*waittime = death_time;
+		*waittime = death_time - start;
 	// if (rem > timeout) //rpalce with sleep to death
 	// {
 	// 	if (usleep(timeout - 2e3) == ER)
@@ -113,7 +112,6 @@ t_sts	smart_sleep(t_time waittime, t_philo *philo)
 	if (choose_duration_to_sleep(start, &waittime, philo) != OK)
 		return (ER);
 	rem = waittime;
-	// printf("%lld\n", waittime);
 	while (rem > 1e3)
 	{
 		if (usleep(rem / 2) == ER)
@@ -127,7 +125,6 @@ t_sts	smart_sleep(t_time waittime, t_philo *philo)
 		if (get_time(US, &now, philo->ctx->start_time * 1e3) != OK)
 			return (ER);
 	}
-	// printf("here %lld\n", philo->id);
 	if (now / 1e3 - philo->last_meal_time > philo->ctx->time_to_die)
 	{
 		if (ft_sem_wait(philo->ctx->lock) != OK)

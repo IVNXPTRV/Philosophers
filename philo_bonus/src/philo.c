@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 03:05:16 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 07:40:41 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 08:19:06 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ t_sts	philo_think(t_philo *philo)
 		if (smart_sleep(philo->ctx->time_to_think, philo) != OK)
 			return (FAIL);
 	}
+	else
+		usleep(1);
 	return (OK);
 }
 
@@ -97,6 +99,8 @@ void	*philo_routine(void *ptr)
 		end = true;
 	while (!end)
 	{
+		if (take_forks(philo) != OK)
+			break ;
 		if (philo_eat(philo) != OK)
 			break ;
 		if (philo_sleep(philo) != OK)

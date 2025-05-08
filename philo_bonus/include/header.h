@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 06:58:07 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 08:17:30 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ t_sts					run_simulation(t_ctx *ctx);
 void					*philo_routine(void *ptr);
 t_sts					check_in_meal(t_philo *philo, t_time now);
 t_sts					is_all_full(t_philo *philo);
-t_sts					take_forks(t_philo *philo, t_time now);
+t_sts					take_forks(t_philo *philo);
 t_sts					release_forks(t_philo *philo);
 t_sts					philo_eat(t_philo *philo);
 

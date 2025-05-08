@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 03:01:39 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 06:34:26 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 08:20:01 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,27 @@ static t_sts	take_fork(t_philo *philo)
 	return (OK);
 }
 
-t_sts	take_forks(t_philo *philo, t_time now)
+t_sts	take_forks(t_philo *philo)
 {
+	t_time	now;
+
+	if (ft_sem_wait(philo->ctx->lock) != OK)
+		return (FAIL);
+	if (get_time(MS, &now, philo->ctx->start_time) != OK)
+		return (FAIL);
+	if (is_dead(philo, now))
+		return (FAIL);
 	if (take_fork(philo) != OK)
 		return (FAIL);
 	if (putmsg(philo, now, FORK_1) != OK)
 		return (FAIL);
+	if (take_fork(philo) != OK)
+		return (FAIL);
+	if (putmsg(philo, now, FORK_2) != OK)
+		return (FAIL);
+	if (ft_sem_post(philo->ctx->lock) != OK)
+		return (FAIL);
+	usleep(1);
 	// if (philo->ctx->num_philos == 1)
 	// {
 	// 	if (mtx_unlock(&philo->ctx->lock) != OK)
@@ -36,10 +51,6 @@ t_sts	take_forks(t_philo *philo, t_time now)
 	// 	if (is_end(philo->ctx))
 	// 		return (FAIL);
 	// }
-	if (take_fork(philo) != OK)
-		return (FAIL);
-	if (putmsg(philo, now, FORK_2) != OK)
-		return (FAIL);
 	return (OK);
 }
 
