@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:21:35 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 06:57:20 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 17:08:00 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,13 @@ t_sts	init_ctx(t_ctx *ctx)
  */
 t_sts	init_data(t_ctx *ctx)
 {
+
+	if (ft_sem_unlink(LOCKNME) != OK)
+		return (ER);
+	if (ft_sem_unlink(FORKSNME) != OK)
+		return (ER);
+	if (ft_sem_unlink(FULLNME) != OK)
+		return (ER);
 	if (init_ctx(ctx) != OK)
 		return (ER);
 	if (allocate_forks(ctx) != OK)

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 06:24:14 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 09:50:00 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 16:50:46 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ t_sts	end_monitor(t_ctx *ctx)
 	}
 	ctx->end = true;
 	if (ft_sem_post(ctx->full) != OK)
-		return (NULL);
+		return (ER);
 	if (th_join(&tid) != OK)
 		return (ER);
 	return (OK);

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 04:20:03 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 06:51:20 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 17:06:27 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ t_sts ft_sem_unlink(char *name)
 	int code;
 
 	code = sem_unlink(name);
-	// if (code == ER)
-	// 	return (puterr("sem_unlink: failed"));
+	if (code == EACCES || code == ENAMETOOLONG)
+		return (puterr("sem_unlink: failed"));
 	(void)code;
 	return (OK);
 }

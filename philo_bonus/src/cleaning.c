@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 05:59:20 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 07:46:19 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 17:04:12 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ t_int	clean_philos(t_ctx *ctx)
 	return (OK);
 }
 
-// t_sts	clean(t_ctx *ctx)
-// {
-// 	clean_philos(&ctx->philos);
-// 	clean_forks(ctx);
-// 	clean_ctx(&ctx);
-// 	return (OK);
-// }
+t_sts	clean(t_ctx *ctx)
+{
+	clean_sem(LOCKNME, ctx->lock);
+	clean_sem(FORKSNME, ctx->forks);
+	clean_sem(FULLNME, ctx->full);
+	return (OK);
+}
