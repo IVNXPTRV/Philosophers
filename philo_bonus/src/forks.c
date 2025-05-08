@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 03:01:39 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 11:20:23 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:57:54 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_sts	take_forks(t_philo *philo)
 		return (FAIL);
 	if (get_time(MS, &now, philo->ctx->start_time) != OK)
 		return (FAIL);
-	if (is_dead(philo, now))
+	if (is_dead(philo, now, false))
 		return (FAIL);
 	if (take_fork(philo) != OK)
 		return (FAIL);

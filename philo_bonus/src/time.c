@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:44:38 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 11:28:35 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:57:04 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,11 @@ t_sts	choose_duration_to_sleep(t_time	start, t_time *waittime, t_time *rem, t_ph
 
 	death_time = philo->last_meal_time * 1e3 + philo->ctx->time_to_die * 1e3;
 	if (start + *waittime > death_time)
+	{
 		*waittime = death_time - start;
+		if (*waittime < 0)
+			*waittime = 0;
+	}
 	*rem = *waittime;
 	return (OK);
 }
@@ -107,7 +111,7 @@ t_sts	smart_sleep(t_time waittime, t_philo *philo)
 		if (get_time(US, &now, philo->ctx->start_time * 1e3) != OK)
 			return (ER);
 	}
-	if (is_dead(philo, now / 1e3))
+	if (is_dead(philo, now / 1e3, true))
 		return (FAIL);
 	return (OK);
 }

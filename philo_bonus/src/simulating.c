@@ -6,18 +6,22 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 11:33:45 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:56:41 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-t_sts	is_dead(t_philo *philo, t_time now)
+t_sts	is_dead(t_philo *philo, t_time now, t_int flag)
 {
+
 	if (now - philo->last_meal_time >= philo->ctx->time_to_die)
 	{
-		if (ft_sem_wait(philo->ctx->lock) != OK)
-			return (FAIL);
+		if (flag == true)
+		{
+			if (ft_sem_wait(philo->ctx->lock) != OK)
+				return (FAIL);
+		}
 		putmsg(philo, now, DIED);
 		printf("\nOne philo is dead. Simulation is stopped.\n");
 		exit(DIED);

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 06:24:14 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 11:32:56 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:44:01 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,9 @@ t_sts	end_monitor(t_ctx *ctx)
 				break ;
 			return (puterr("waitpid: failed\n"));
 		}
-		if (WEXITSTATUS(status) == DIED || WEXITSTATUS(status) == ER)
-		{
-			clean_philos(ctx); //kill all processes
-			break ;
-		}
+		if (!ctx->end && (WEXITSTATUS(status) == DIED || WEXITSTATUS(status) == ER))
+			clean_philos(ctx); // kill all processes
 	}
-	ctx->end = true;
 	if (ft_sem_post(ctx->full) != OK)
 		return (ER);
 	if (th_join(&tid) != OK)

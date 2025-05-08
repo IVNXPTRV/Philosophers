@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 03:02:36 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 11:33:45 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:57:42 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_sts	philo_eat(t_philo *philo)
 		return (FAIL);
 	if (get_time(MS, &now, philo->ctx->start_time) != OK)
 		return (FAIL);
-	if (is_dead(philo, now))
+	if (is_dead(philo, now, false))
 		return (FAIL);
 	check_in_meal(philo, now);
 	if (putmsg(philo, now, EAT) != OK)

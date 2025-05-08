@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 03:05:16 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 11:20:42 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:57:34 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_sts	philo_sleep(t_philo *philo)
 		return (FAIL);
 	if (get_time(MS, &now, philo->ctx->start_time) != OK)
 		return (FAIL);
-	if (is_dead(philo, now))
+	if (is_dead(philo, now, false))
 		return (FAIL);
 	if (putmsg(philo, now, SLEEP) != OK)
 		return (FAIL);
@@ -70,7 +70,7 @@ t_sts	philo_think(t_philo *philo)
 		return (FAIL);
 	if (get_time(MS, &now, philo->ctx->start_time) != OK)
 		return (FAIL);
-	if (is_dead(philo, now))
+	if (is_dead(philo, now, false))
 		return (FAIL);
 	if (putmsg(philo, now, THINK) != OK)
 		return (FAIL);

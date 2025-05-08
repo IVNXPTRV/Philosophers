@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 11:19:10 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 11:56:51 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ t_sts					putmsg(t_philo *philo, t_time now, t_msg msg);
 /**
  * STATUS
  */
-t_sts					is_dead(t_philo *philo, t_time now);
+t_sts	is_dead(t_philo *philo, t_time now, t_int flag);
 t_sts					is_end(t_ctx *ctx);
 
 /**
