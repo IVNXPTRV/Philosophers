@@ -6,7 +6,7 @@
 #    By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/05 17:48:31 by vvoronts          #+#    #+#              #
-#    Updated: 2025/04/30 10:26:35 by ipetrov          ###   ########.fr        #
+#    Updated: 2025/05/08 03:06:35 by ipetrov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,8 @@ INCLUDE				=	$(addprefix -I, $(INCLUDE_DIRS))
 # Source files
 SRC 				=	\
 						cleaning.c \
+						eat.c \
+						forks.c \
 						initializing.c \
 						main.c \
 						monitor.c \
@@ -40,6 +42,7 @@ SRC 				=	\
 						numbers.c \
 						parsing.c \
 						printing.c \
+						philo.c \
 						simulating.c \
 						thread.c \
 						time.c \

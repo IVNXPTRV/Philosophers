@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 08:09:48 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/06 10:00:07 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 03:09:53 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,37 +120,4 @@ t_sts	mtx_unlock(t_mtx *lock)
 		return (puterr("pthread_mutex_lock: Error: Operation not permitted\n"));
 	else
 		return (ER);
-}
-
-/**
- * @brief Set the val object atomically
- *
- * @param lock
- * @param var - variable to write data to
- * @param val - value to be written to var
- * @return int
- */
-t_sts	set_val(t_mtx *lock, void *dst, void *src)
-{
-	if (mtx_lock(lock) != OK)
-		return (ER);
-	ft_memcpy(dst, src, sizeof(t_int));
-	if (mtx_unlock(lock) != OK)
-		return (ER);
-	return (OK);
-}
-
-/**
- * @brief Get the val object atomically
- *
- * @param lock
- * @param var - variable to read data from
- * @param val - palce to put read content
- * @return int
- */
-t_sts	get_val(t_mtx *lock, void *src, void *dst)
-{
-	if (set_val(lock, dst, src) != OK)
-		return (ER);
-	return (OK);
 }

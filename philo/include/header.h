@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/06 10:00:40 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 03:09:34 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,7 @@ t_sts					is_end(t_ctx *ctx);
 t_sts					get_time(t_time_type type, t_time *dst,
 							t_time start_time);
 t_sts					smart_sleep(t_time waittime, t_ctx *ctx);
+
 /**
  * PARSING
  */
@@ -154,6 +155,9 @@ t_sts					run_simulation(t_ctx *ctx);
 void					*philo_routine(void *ptr);
 t_sts					check_in_meal(t_philo *philo, t_time now);
 t_sts					is_all_full(t_philo *philo);
+t_sts					take_forks(t_philo *philo, t_time now);
+t_sts					release_forks(t_philo *philo);
+t_sts					philo_eat(t_philo *philo);
 
 /**
  * INITIALIZING
@@ -171,8 +175,6 @@ t_sts					death_monitor(t_ctx *ctx);
  * MUTEX
  *
  */
-t_sts					set_val(t_mtx *lock, void *dst, void *src);
-t_sts					get_val(t_mtx *lock, void *src, void *dst);
 t_sts					mtx_init(t_mtx *mtx);
 t_sts					mtx_destroy(t_mtx *mtx);
 t_sts					mtx_lock(t_mtx *lock);
