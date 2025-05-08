@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:44:38 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 08:12:24 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 09:30:40 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,25 +61,8 @@ t_sts	choose_duration_to_sleep(t_time	start, t_time *waittime, t_philo *philo)
 	t_time death_time;
 
 	death_time = philo->last_meal_time * 1e3 + philo->ctx->time_to_die * 1e3;
-	// printf("id: %lld\ndeathtime: %lld\n", philo->id, death_time);
-	// printf("death_time: %lld\nstart: %lld\n", death_time, start);
 	if (start + *waittime > death_time)
 		*waittime = death_time - start;
-	// if (rem > timeout) //rpalce with sleep to death
-	// {
-	// 	if (usleep(timeout - 2e3) == ER)
-	// 		return (puterr("usleep: Error: Interrupted system call\n"));
-	// 	// if (mtx_lock(&ctx->lock) != OK)
-	// 	// 	return (FAIL);
-	// 	// if (is_end(ctx))
-	// 	// 	return (FAIL);
-	// 	// if (mtx_unlock(&ctx->lock) != OK)
-	// 	// 	return (FAIL);
-	// }
-	// else
-	// {
-
-	// }
 	return (OK);
 }
 
@@ -108,7 +91,6 @@ t_sts	smart_sleep(t_time waittime, t_philo *philo)
 	if (get_time(US, &start, philo->ctx->start_time * 1e3) != OK)
 		return (ER);
 	waittime *= 1e3;
-	// printf("start: %lld\nwaittime: %lld\n", start, waittime);
 	if (choose_duration_to_sleep(start, &waittime, philo) != OK)
 		return (ER);
 	rem = waittime;
@@ -125,13 +107,7 @@ t_sts	smart_sleep(t_time waittime, t_philo *philo)
 		if (get_time(US, &now, philo->ctx->start_time * 1e3) != OK)
 			return (ER);
 	}
-	if (now / 1e3 - philo->last_meal_time > philo->ctx->time_to_die)
-	{
-		if (ft_sem_wait(philo->ctx->lock) != OK)
-			return (FAIL);
-		putmsg(philo, now / 1e3, DIED);
-		printf("\nOne philo is dead. Simulation is stopped.\n");
-		exit(DIED);
-	}
+	if (is_dead(philo, now / 1e3))
+		return (FAIL);
 	return (OK);
 }
