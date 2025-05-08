@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 03:01:39 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 11:57:54 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 12:08:04 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,13 @@ static t_sts	take_fork(t_philo *philo)
 	return (OK);
 }
 
+static t_sts one_philo(t_philo *philo)
+{
+	if (ft_sem_post(philo->ctx->lock) != OK)
+		return (FAIL);
+	if (smart_sleep(philo->ctx->time_to_die + 1, philo) != OK)
+		return (FAIL);
+}
 t_sts	take_forks(t_philo *philo)
 {
 	t_time	now;
@@ -34,12 +41,7 @@ t_sts	take_forks(t_philo *philo)
 	if (putmsg(philo, now, FORK_1) != OK)
 		return (FAIL);
 	if (philo->ctx->num_philos == 1)
-	{
-		if (ft_sem_post(philo->ctx->lock) != OK)
-			return (FAIL);
-		if (smart_sleep(philo->ctx->time_to_die + 1, philo) != OK)
-			return (FAIL);
-	}
+		one_philo(philo);
 	if (take_fork(philo) != OK)
 		return (FAIL);
 	if (putmsg(philo, now, FORK_2) != OK)
