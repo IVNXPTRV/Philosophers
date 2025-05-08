@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 06:45:34 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 06:58:07 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@
 # define ERPTR "\xFF"
 # define OKPTR "\x01"
 # define MSG "%lld %lld %s"
-# define TIMEOUT 200
+# define TIMEOUT 1000 // 1 sec timeout
 # define RED "\033[31m"
 # define RESET "\033[0m\n"
 

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 06:39:58 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 06:49:52 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 07:16:56 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  * ./philo 5 800 200 200 7 -- no one dies,
 	sim stops when each philo has eaten 7 meals
  *
- * ./philo    5    800  200   200     7
+ * ./philo    5     800  200   200     7
  * 			philos  die  eat  sleep  meals
  */
 int	main(int ac, char **av)

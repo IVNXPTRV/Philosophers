@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:44:38 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 06:47:36 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 07:45:02 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,25 +56,31 @@ t_sts	get_time(t_time_type type, t_time *dst, t_time start_time)
 	return (OK);
 }
 
-t_sts	choose_duration_to_sleep(t_time	timeout, t_time	rem,  t_philo *philo)
+t_sts	choose_duration_to_sleep(t_time	start, t_time *waittime, t_philo *philo)
 {
-	(void)philo;
-	if (rem > timeout) //rpalce with sleep to death
-	{
-		if (usleep(timeout - 2e3) == ER)
-			return (puterr("usleep: Error: Interrupted system call\n"));
-		// if (mtx_lock(&ctx->lock) != OK)
-		// 	return (FAIL);
-		// if (is_end(ctx))
-		// 	return (FAIL);
-		// if (mtx_unlock(&ctx->lock) != OK)
-		// 	return (FAIL);
-	}
-	else
-	{
-		if (usleep(rem / 2) == ER)
-			return (puterr("usleep: Error: Interrupted system call\n"));
-	}
+	t_time death_time;
+
+	death_time = philo->last_meal_time * 1e3 + philo->ctx->time_to_die * 1e3;
+	(void)death_time;
+	// printf("death_time: %lld\nstart: %lld\n", death_time, start);
+	(void)start;
+	if (start + *waittime > death_time)
+		*waittime = death_time;
+	// if (rem > timeout) //rpalce with sleep to death
+	// {
+	// 	if (usleep(timeout - 2e3) == ER)
+	// 		return (puterr("usleep: Error: Interrupted system call\n"));
+	// 	// if (mtx_lock(&ctx->lock) != OK)
+	// 	// 	return (FAIL);
+	// 	// if (is_end(ctx))
+	// 	// 	return (FAIL);
+	// 	// if (mtx_unlock(&ctx->lock) != OK)
+	// 	// 	return (FAIL);
+	// }
+	// else
+	// {
+
+	// }
 	return (OK);
 }
 
@@ -97,27 +103,38 @@ t_sts	choose_duration_to_sleep(t_time	timeout, t_time	rem,  t_philo *philo)
 t_sts	smart_sleep(t_time waittime, t_philo *philo)
 {
 	t_time	start;
-	t_time	timeout;
 	t_time	now;
 	t_time	rem;
 
-	if (get_time(US, &start, EPOCH) != OK)
+	if (get_time(US, &start, philo->ctx->start_time * 1e3) != OK)
 		return (ER);
 	waittime *= 1e3;
+	// printf("start: %lld\nwaittime: %lld\n", start, waittime);
+	if (choose_duration_to_sleep(start, &waittime, philo) != OK)
+		return (ER);
 	rem = waittime;
-	timeout = TIMEOUT * 1e3;
+	// printf("%lld\n", waittime);
 	while (rem > 1e3)
 	{
-		if (choose_duration_to_sleep(timeout, rem, philo) != OK)
-			return (ER);
-		if (get_time(US, &now, EPOCH) != OK)
+		if (usleep(rem / 2) == ER)
+			return (puterr("usleep: Error: Interrupted system call\n"));
+		if (get_time(US, &now, philo->ctx->start_time * 1e3) != OK)
 			return (ER);
 		rem = waittime - (now - start);
 	}
 	while (now - start < waittime)
 	{
-		if (get_time(US, &now, EPOCH) != OK)
+		if (get_time(US, &now, philo->ctx->start_time * 1e3) != OK)
 			return (ER);
+	}
+	// printf("here %lld\n", philo->id);
+	if (now / 1e3 - philo->last_meal_time > philo->ctx->time_to_die)
+	{
+		if (ft_sem_wait(philo->ctx->lock) != OK)
+			return (FAIL);
+		putmsg(philo, now / 1e3, DIED);
+		printf("\nOne philo is dead. Simulation is stopped.\n");
+		exit(DIED);
 	}
 	return (OK);
 }

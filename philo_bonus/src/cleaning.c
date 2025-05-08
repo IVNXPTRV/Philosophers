@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 05:59:20 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 06:40:33 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 07:46:19 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ t_int	clean_philos(t_ctx *ctx)
 	{
 		if (ctx->philos[i].pid != 0)
 			kill(ctx->philos[i].pid, SIGKILL);
+		i++;
 	}
 	return (OK);
 }
