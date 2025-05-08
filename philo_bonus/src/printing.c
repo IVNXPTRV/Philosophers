@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:23:46 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/30 10:19:02 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 06:45:57 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,21 +48,6 @@ static char	*get_msg(t_msg msg)
 	return (NULL);
 }
 
-static t_sts	put_debug_msg(t_time now, t_philo *philo, t_msg msg)
-{
-	if (msg == FORK_1)
-		return (printf(MSG " [%lld]\n", now, philo->id, get_msg(msg),
-				philo->fork_one->id));
-	if (msg == FORK_2)
-		return (printf(MSG " [%lld]\n", now, philo->id, get_msg(msg),
-				philo->fork_two->id));
-	if (msg == EAT)
-		return (printf(MSG " [%lld]\n", now, philo->id, get_msg(msg),
-				philo->meals_eaten));
-	if (msg == SLEEP || msg == THINK || msg == DIED)
-		return (printf(MSG "\n", now, philo->id, get_msg(msg)));
-	return (OK);
-}
 
 /**
  * @brief
@@ -76,9 +61,7 @@ static t_sts	put_debug_msg(t_time now, t_philo *philo, t_msg msg)
  */
 t_sts	putmsg(t_philo *philo, t_time now, t_msg msg)
 {
-	if (DEBUG)
-		put_debug_msg(now, philo, msg);
-	else if (printf(MSG "\n", now, philo->id, get_msg(msg)) < 0)
+	if (printf(MSG "\n", now, philo->id, get_msg(msg)) < 0)
 		return (puterr("printf: failed\n"));
 	return (OK);
 }

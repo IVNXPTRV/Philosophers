@@ -6,59 +6,36 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 05:59:20 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 10:53:56 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 06:40:33 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-t_int	clean_ctx(t_ctx **ctx)
+t_int	clean_sem(char *name, sem_t *sem)
 {
-	mtx_destroy(&((*ctx)->lock));
-	*ctx = NULL;
+	ft_sem_close(sem);
+	ft_sem_unlink(name);
 	return (OK);
 }
 
-t_int	clean_forks(t_ctx *ctx)
-{
-	t_int	i;
-
-	i = 0;
-	while (ctx->forks[i].id < ctx->num_philos)
-	{
-		mtx_destroy(&ctx->forks[i].lock);
-		i++;
-	}
-	free(ctx->forks);
-	ctx->forks = NULL;
-	return (OK);
-}
-
-t_int	clean_philos(t_philo **philos)
-{
-	free(*philos);
-	*philos = NULL;
-	return (OK);
-}
-
-t_sts	join_threads(t_ctx *ctx)
+t_int	clean_philos(t_ctx *ctx)
 {
 	t_int	i;
 
 	i = 0;
 	while (i < ctx->num_philos)
 	{
-		th_join(&ctx->philos[i].tid);
-		i++;
+		if (ctx->philos[i].pid != 0)
+			kill(ctx->philos[i].pid, SIGKILL);
 	}
 	return (OK);
 }
 
-t_sts	clean(t_ctx *ctx)
-{
-	join_threads(ctx);
-	clean_philos(&ctx->philos);
-	clean_forks(ctx);
-	clean_ctx(&ctx);
-	return (OK);
-}
+// t_sts	clean(t_ctx *ctx)
+// {
+// 	clean_philos(&ctx->philos);
+// 	clean_forks(ctx);
+// 	clean_ctx(&ctx);
+// 	return (OK);
+// }

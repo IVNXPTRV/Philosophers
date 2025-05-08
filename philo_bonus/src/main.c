@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 06:39:58 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 04:17:41 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 06:49:52 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,6 @@ int	main(int ac, char **av)
 	if (init_data(&ctx) != OK)
 		return (EXIT_FAILURE);
 	run_simulation(&ctx);
-	clean(&ctx);
+	// clean(&ctx);
 	return (EXIT_SUCCESS);
 }

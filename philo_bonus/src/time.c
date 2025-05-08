@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:44:38 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/06 09:57:43 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 06:47:36 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,19 @@ t_sts	get_time(t_time_type type, t_time *dst, t_time start_time)
 	return (OK);
 }
 
-t_sts	choose_duration_to_sleep(t_time	timeout, t_time	rem, t_ctx *ctx)
+t_sts	choose_duration_to_sleep(t_time	timeout, t_time	rem,  t_philo *philo)
 {
-	if (rem > timeout)
+	(void)philo;
+	if (rem > timeout) //rpalce with sleep to death
 	{
 		if (usleep(timeout - 2e3) == ER)
 			return (puterr("usleep: Error: Interrupted system call\n"));
-		if (mtx_lock(&ctx->lock) != OK)
-			return (FAIL);
-		if (is_end(ctx))
-			return (FAIL);
-		if (mtx_unlock(&ctx->lock) != OK)
-			return (FAIL);
+		// if (mtx_lock(&ctx->lock) != OK)
+		// 	return (FAIL);
+		// if (is_end(ctx))
+		// 	return (FAIL);
+		// if (mtx_unlock(&ctx->lock) != OK)
+		// 	return (FAIL);
 	}
 	else
 	{
@@ -93,7 +94,7 @@ t_sts	choose_duration_to_sleep(t_time	timeout, t_time	rem, t_ctx *ctx)
  * @param waittime
  * @return int
  */
-t_sts	smart_sleep(t_time waittime, t_ctx *ctx)
+t_sts	smart_sleep(t_time waittime, t_philo *philo)
 {
 	t_time	start;
 	t_time	timeout;
@@ -107,7 +108,7 @@ t_sts	smart_sleep(t_time waittime, t_ctx *ctx)
 	timeout = TIMEOUT * 1e3;
 	while (rem > 1e3)
 	{
-		if (choose_duration_to_sleep(timeout, rem, ctx) != OK)
+		if (choose_duration_to_sleep(timeout, rem, philo) != OK)
 			return (ER);
 		if (get_time(US, &now, EPOCH) != OK)
 			return (ER);

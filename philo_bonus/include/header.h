@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 04:27:46 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 06:45:34 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@
 # include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
-# include <semaphore.h> // sem_open
+# include <semaphore.h> 		// sem_open
 # include <fcntl.h>           /* For O_* constants */
+# include <signal.h>			//kill
+#include <sys/wait.h> 			//waitpid
 
 # define DEBUG false
 # define UNDEFINED -1
@@ -36,6 +38,10 @@
 # define WAIT 1
 # define RUN 0
 # define PRNME "philo: "
+# define ANYPID -1
+# define LOCKNME "/lock"
+# define FORKSNME "/forks"
+# define FULLNME "/full"
 # define ERPTR "\xFF"
 # define OKPTR "\x01"
 # define MSG "%lld %lld %s"
@@ -68,6 +74,7 @@ typedef enum e_msg
 	SLEEP,
 	THINK,
 	DIED,
+	FULL,
 }						t_msg;
 
 typedef enum e_time_type
@@ -76,30 +83,15 @@ typedef enum e_time_type
 	MS
 }						t_time_type;
 
-typedef struct s_fork
-{
-	t_int				id;
-	t_mtx				lock;
-	t_bool				state;
-}						t_fork;
 
 typedef struct s_philo
 {
 	t_int			id;					// number of philo starting from 1
 	pid_t			pid; 				// process id
 	// VAR
-	sem_t			*lock;				// serialization lock, binary semaphore
+	t_ctx			*ctx;
 	t_int 			meals_eaten;		// -1 if not provided, otherwise number of meals eaten
-	sem_t			*forks;				// total number of forks represented as one semaphore with value of total num of forks
 	t_time			last_meal_time;		// last meal start time in milliseconds
-	// CONST
-	t_int			num_philos;			// number of philos
-	t_time			time_to_die;		// in milliseconds, read-only
-	t_time			time_to_eat;		// in milliseconds, read-only
-	t_time			time_to_sleep;		// in milliseconds, read-only
-	t_time			time_to_think;		// in milliseconds, read-only
-	t_int			meals_to_eat;		// num of meals to eat -1 if UNDEFINED
-	t_time			start_time;			// simulation starting point in milliseconds
 } t_philo;
 
 /*
@@ -108,8 +100,10 @@ typedef struct s_philo
 typedef struct s_ctx
 {
 	sem_t			*lock;				// serialization lock, binary semaphore
+	sem_t			*full;				// binary lock to check in full philo
 	// ** CONST **
 	t_int			num_philos;			// number of philos
+	t_int			num_full_philos;	// number of full philos
 	t_int			meals_to_eat;		// num of meals to eat -1 if UNDEFINED
 	t_time			time_to_die;		// in mlliseconds, read-only
 	t_time			time_to_eat;		// in mlliseconds, read-only
@@ -117,9 +111,9 @@ typedef struct s_ctx
 	t_time			time_to_think;		// in mlliseconds, read-only
 	t_time			start_time;			// simulation starting point in mlliseconds
 	// ** TO CLEAN **
-	t_philo			*philos; 			// array of philos PID
+	t_philo			philos[200]; 		// array of philos
 	sem_t			*forks; 			// array of forks
-} t_ctx;						t_ctx;
+} t_ctx;
 
 /*
  * UTILS
@@ -147,7 +141,7 @@ t_sts					is_end(t_ctx *ctx);
  */
 t_sts					get_time(t_time_type type, t_time *dst,
 							t_time start_time);
-t_sts					smart_sleep(t_time waittime, t_ctx *ctx);
+t_sts					smart_sleep(t_time waittime, t_philo *philo);
 
 /**
  * PARSING
@@ -171,21 +165,31 @@ t_sts					philo_eat(t_philo *philo);
  *
  */
 t_sts					init_data(t_ctx *ctx);
+t_sts	init_start_time(t_ctx *ctx);
 
 /**
  * MONITOR
  *
  */
-t_sts					death_monitor(t_ctx *ctx);
+t_sts	end_monitor(t_ctx *ctx);
+
+/**
+ * SEMAPHORE
+ *
+ */
+t_sts ft_sem_open(sem_t **sem, char *name, t_int value);
+t_sts ft_sem_close(sem_t *sem);
+t_sts ft_sem_unlink(char *name);
+t_sts ft_sem_post(sem_t *sem);
+t_sts ft_sem_wait(sem_t *sem);
+
 
 /**
  * MUTEX
  *
  */
-t_sts					mtx_init(t_mtx *mtx);
-t_sts					mtx_destroy(t_mtx *mtx);
-t_sts					mtx_lock(t_mtx *lock);
-t_sts					mtx_unlock(t_mtx *lock);
+t_sts	mtx_lock(t_mtx *lock);
+t_sts	mtx_unlock(t_mtx *lock);
 
 /**
  * THREAD
@@ -195,13 +199,20 @@ t_sts					th_create(pthread_t *tid, void *func(void *),
 							void *arg);
 t_sts					th_join(pthread_t *tid);
 
+
+/**
+ * FORK
+ *
+ */
+t_sts ft_fork(pid_t *pid);
+
 /**
  * CLEANING
  *
  */
-t_int					clean_forks(t_ctx *ctx);
-t_sts					clean_philos(t_philo **philos);
-t_sts					clean_ctx(t_ctx **ctx);
+t_int	clean_sem(char *name, sem_t *sem);
+t_int	clean_philos(t_ctx *ctx);
+t_sts					clean_ctx(t_ctx *ctx);
 t_sts					clean(t_ctx *ctx);
 
 #endif

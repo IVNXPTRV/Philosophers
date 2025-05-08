@@ -6,7 +6,7 @@
 #    By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/05 17:48:31 by vvoronts          #+#    #+#              #
-#    Updated: 2025/05/08 03:06:35 by ipetrov          ###   ########.fr        #
+#    Updated: 2025/05/08 06:48:30 by ipetrov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ INCLUDE				=	$(addprefix -I, $(INCLUDE_DIRS))
 SRC 				=	\
 						cleaning.c \
 						eat.c \
+						fork.c \
 						forks.c \
 						initializing.c \
 						main.c \
@@ -41,8 +42,9 @@ SRC 				=	\
 						mutex.c \
 						numbers.c \
 						parsing.c \
-						printing.c \
 						philo.c \
+						printing.c \
+						semaphore.c \
 						simulating.c \
 						thread.c \
 						time.c \

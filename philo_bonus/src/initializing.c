@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:21:35 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/04/28 10:25:08 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 06:55:44 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,48 +23,24 @@ t_sts	allocate_philos(t_ctx *ctx)
 {
 	t_int	i;
 
-	ctx->philos = ft_calloc(ctx->num_philos, sizeof(t_philo));
-	if (!ctx->philos)
-		return (ER);
 	i = 0;
 	while (i < ctx->num_philos)
 	{
 		ctx->philos[i].id = i + 1;
 		ctx->philos[i].ctx = ctx;
-		if (ctx->philos[i].id < ctx->num_philos)
-		{
-			ctx->philos[i].fork_one = &ctx->forks[i];
-			ctx->philos[i].fork_two = &ctx->forks[i + 1];
-		}
-		else
-		{
-			ctx->philos[i].fork_one = &ctx->forks[0];
-			ctx->philos[i].fork_two = &ctx->forks[i];
-		}
+		ctx->philos[i].last_meal_time = 0;
+		if (ctx->meals_to_eat != -1)
+			ctx->philos[i].meals_eaten = 0;
 		i++;
 	}
 	return (OK);
 }
 
+// ctx->num_philos - 1 -- to prevent deadlock ????
 t_sts	allocate_forks(t_ctx *ctx)
 {
-	t_int	i;
-
-	ctx->forks = ft_calloc(ctx->num_philos, sizeof(t_fork));
-	if (!ctx->forks)
+	if (ft_sem_open(&ctx->forks, FORKSNME, ctx->num_philos) != OK)
 		return (ER);
-	i = 0;
-	while (i < ctx->num_philos)
-	{
-		ctx->forks[i].id = i + 1;
-		ctx->forks[i].state = false;
-		if (mtx_init(&ctx->forks[i].lock) != OK)
-		{
-			clean_forks(ctx);
-			return (ER);
-		}
-		i++;
-	}
 	return (OK);
 }
 
@@ -81,9 +57,10 @@ t_sts	attach_philos(t_ctx *ctx)
 	i = 0;
 	while (i < ctx->num_philos)
 	{
-		if (th_create(&ctx->philos[i].tid, philo_routine,
-				&ctx->philos[i]) != OK)
-			return (ER);
+		if (ft_fork(&ctx->philos[i].pid) != OK)
+			return (ER); // clean previously cretaed proccesses
+		if (ctx->philos[i].pid == 0) // child
+			philo_routine(&ctx->philos[i]);
 		i++;
 	}
 	return (OK);
@@ -95,9 +72,9 @@ t_sts	attach_philos(t_ctx *ctx)
  */
 t_sts	init_ctx(t_ctx *ctx)
 {
-	if (mtx_init(&ctx->lock) != OK)
+	if (ft_sem_open(&ctx->lock, LOCKNME, 0) != OK)
 		return (ER);
-	if (mtx_lock(&ctx->lock) != OK)
+	if (ft_sem_open(&ctx->full, FULLNME, 0) != OK)
 		return (ER);
 	if (ctx->num_philos % 2)
 		ctx->time_to_think = 2 * ctx->time_to_eat - ctx->time_to_sleep;
@@ -118,23 +95,16 @@ t_sts	init_data(t_ctx *ctx)
 		return (ER);
 	if (allocate_forks(ctx) != OK)
 	{
-		mtx_unlock(&ctx->lock);
-		clean_ctx(&ctx);
+		clean_sem(LOCKNME, ctx->lock);
+		clean_sem(FULLNME, ctx->full);
 		return (ER);
 	}
-	if (allocate_philos(ctx) != OK)
-	{
-		mtx_unlock(&ctx->lock);
-		clean_forks(ctx);
-		clean_ctx(&ctx);
-		return (ER);
-	}
+	allocate_philos(ctx);
 	if (attach_philos(ctx) != OK)
 	{
-		mtx_unlock(&ctx->lock);
-		clean_philos(&ctx->philos);
-		clean_forks(ctx);
-		clean_ctx(&ctx);
+		clean_philos(ctx);
+		clean_sem(LOCKNME, ctx->lock);
+		clean_sem(FULLNME, ctx->full);
 		return (ER);
 	}
 	return (OK);
