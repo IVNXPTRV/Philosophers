@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 06:24:14 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 09:45:35 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 09:50:00 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ static void *full_monitor(void *ptr)
 	while (true)
 	{
 		if (ft_sem_wait(ctx->full) != OK)
+			return (NULL);
+		if (ctx->end == true)
 			return (NULL);
 		ctx->num_full_philos++;
 		if (ctx->num_full_philos == ctx->num_philos)
@@ -64,6 +66,9 @@ t_sts	end_monitor(t_ctx *ctx)
 		if (ft_sem_post(ctx->lock) != OK) // continue simulation after check
 			return (ER);
 	}
+	ctx->end = true;
+	if (ft_sem_post(ctx->full) != OK)
+		return (NULL);
 	if (th_join(&tid) != OK)
 		return (ER);
 	return (OK);

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 08:17:30 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/08 09:48:46 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ typedef struct s_ctx
 	sem_t			*full;				// binary lock to check in full philo
 	// ** CONST **
 	t_int			num_philos;			// number of philos
+	t_bool			end;				// end flag for full_monitor
 	t_int			num_full_philos;	// number of full philos
 	t_int			meals_to_eat;		// num of meals to eat -1 if UNDEFINED
 	t_time			time_to_die;		// in mlliseconds, read-only
