@@ -6,7 +6,7 @@
 #    By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/05 17:48:31 by vvoronts          #+#    #+#              #
-#    Updated: 2025/05/08 16:40:57 by ipetrov          ###   ########.fr        #
+#    Updated: 2025/05/09 11:16:08 by ipetrov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ CFLAGS				=	-pthread -O1 -Wall -Wextra -Werror -Wunreachable-code -g -MMD -MF
 RM					=	rm -rf
 
 # Name of the output library
-NAME				=	philo
+NAME				=	philo_bonus
 
 # Include directories
 INCLUDE_DIRS		=	\

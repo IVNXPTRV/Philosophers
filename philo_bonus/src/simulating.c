@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/09 09:00:20 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/09 11:15:48 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_sts	is_dead(t_philo *philo, t_time now, t_int flag)
 {
-	if (now - philo->last_meal_time > philo->ctx->time_to_die)
+	if (now - philo->last_meal_time >= philo->ctx->time_to_die)
 	{
 		if (flag == true)
 		{
