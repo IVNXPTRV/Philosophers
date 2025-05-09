@@ -16,7 +16,6 @@
 .DS_store
 *.txt
 # *.py
-*.md
 *.lldb
 *.png
 *.gch
