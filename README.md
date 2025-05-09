@@ -10,3 +10,7 @@
 	./philo 5 800 200 200 10
 	```
 
+## Check system delay
+	```bash
+	python3 delay.py
+	```
