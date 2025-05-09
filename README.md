@@ -12,6 +12,6 @@
 
 ## Check system delay
 
-	```bash
-	python3 delay.py
-	```
+```bash
+python3 delay.py
+```
