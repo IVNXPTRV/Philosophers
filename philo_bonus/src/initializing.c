@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 04:21:35 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 11:16:19 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/09 08:59:26 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ t_sts	attach_philos(t_ctx *ctx)
  */
 t_sts	init_ctx(t_ctx *ctx)
 {
+	mtx_init(&ctx->monitor_lock);
 	if (ft_sem_open(&ctx->lock, LOCKNME, 0) != OK)
 		return (ER);
 	if (ft_sem_open(&ctx->full, FULLNME, 0) != OK)

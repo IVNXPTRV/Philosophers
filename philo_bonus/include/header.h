@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:49:44 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 12:14:06 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/09 09:01:23 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ typedef struct s_ctx
 
 	t_philo				philos[200];
 	sem_t				*forks;
+	t_mtx				monitor_lock;
 }						t_ctx;
 
 /*
@@ -190,6 +191,8 @@ t_sts					ft_sem_wait(sem_t *sem);
  */
 t_sts					mtx_lock(t_mtx *lock);
 t_sts					mtx_unlock(t_mtx *lock);
+t_sts					mtx_init(t_mtx *mtx);
+t_sts					mtx_destroy(t_mtx *mtx);
 
 /**
  * THREAD

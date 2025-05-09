@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 07:36:45 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/09 08:38:02 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/09 09:00:20 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_sts	is_dead(t_philo *philo, t_time now, t_int flag)
 		ft_sem_close(philo->ctx->forks);
 		ft_sem_close(philo->ctx->full);
 		ft_sem_close(philo->ctx->lock);
+		mtx_destroy(&philo->ctx->monitor_lock);
 		exit(DIED);
 		return (TRUE);
 	}

@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 06:24:14 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/09 08:37:23 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/09 09:01:10 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,13 @@ static void	*full_monitor(void *ptr)
 	{
 		if (ft_sem_wait(ctx->full) != OK)
 			return (NULL);
+		mtx_lock(&ctx->monitor_lock);
 		if (ctx->end == true)
+		{
+			mtx_unlock(&ctx->monitor_lock);
 			return (NULL);
+		}
+		mtx_unlock(&ctx->monitor_lock);
 		ctx->num_full_philos++;
 		if (ctx->num_full_philos == ctx->num_philos)
 		{
@@ -32,6 +37,20 @@ static void	*full_monitor(void *ptr)
 		}
 	}
 	return (NULL);
+}
+
+t_sts	check_exit_sts(int *status, t_ctx *ctx)
+{
+	mtx_lock(&ctx->monitor_lock);
+	if (ctx->end)
+	{
+		mtx_unlock(&ctx->monitor_lock);
+		return (OK);
+	}
+	mtx_unlock(&ctx->monitor_lock);
+	if ((WEXITSTATUS(*status) == DIED || WEXITSTATUS(*status) == ER))
+		clean_philos(ctx);
+	return (OK);
 }
 
 t_sts	end_monitor(t_ctx *ctx)
@@ -51,9 +70,7 @@ t_sts	end_monitor(t_ctx *ctx)
 				break ;
 			return (puterr("waitpid: failed\n"));
 		}
-		if (!ctx->end && (WEXITSTATUS(status) == DIED
-				|| WEXITSTATUS(status) == ER))
-			clean_philos(ctx);
+		check_exit_sts(&status, ctx);
 	}
 	if (ft_sem_post(ctx->full) != OK)
 		return (ER);
