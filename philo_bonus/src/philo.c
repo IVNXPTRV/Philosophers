@@ -6,7 +6,7 @@
 /*   By: ipetrov <ipetrov@student.42bangkok.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 03:05:16 by ipetrov           #+#    #+#             */
-/*   Updated: 2025/05/08 11:57:34 by ipetrov          ###   ########.fr       */
+/*   Updated: 2025/05/09 09:34:43 by ipetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,17 @@
 
 static inline t_sts	stop_before_herd_gate(t_ctx *ctx)
 {
-	if (ft_sem_wait(ctx->lock) != OK)
-		return (FAIL);
-	if (init_start_time(ctx) != OK)
-		return (FAIL);
-	if (ft_sem_post(ctx->lock) != OK)
-		return (FAIL);
+	t_time now;
+
+	if (get_time(US, &now, EPOCH) != OK)
+		return (ER);
+	while (now < (ctx->start_time * 1e3))
+	{
+		if (get_time(US, &now, EPOCH) != OK)
+			return (ER);
+		if (sched() != OK)
+			return (ER);
+	}
 	return (OK);
 }
 
